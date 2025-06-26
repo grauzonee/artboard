@@ -1,0 +1,66 @@
+version: "3.8"
+
+services:
+  mongodb:
+    image: mongo:8.0
+    restart: unless-stopped
+    environment: 
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+      MONGO_INITDB_DATABASE: crudd-db
+    ports:
+      - "27017:27017"
+    volumes: 
+      - mongodb_data:/data/db
+      - ./init-mongo.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh -u root -p example --quiet
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  backend:
+    build:
+      context: ./backend
+    volumes:
+      - ./backend:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+    restart: unless-stopped
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    command: >
+      sh -c "
+      echo '🛠️ NodeJS is running at http://localhost:3000';
+      npm run dev;
+      "
+
+  frontend:
+    build:
+      context: ./frontend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules 
+    ports:
+      - "9000:8080"
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - backend
+    restart: unless-stopped
+    command: >
+      sh -c "
+      echo '🔰 VueJS is running at http://localhost:9000';
+      npm run dev;
+      "
+volumes:
+  mongodb_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data/mongodb  # This creates a local folder in your project directory
