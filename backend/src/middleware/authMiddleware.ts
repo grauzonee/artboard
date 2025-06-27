@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import jsonwebtoken from 'jsonwebtoken';
-import { getConfigValue } from '../helper/configHelper';
+import { verifyToken } from 'helper/auth/utils';
 
 // Checks whether Bearer token is valid
 export function authMiddleware(req: Request, res: Response, next: NextFunction) {
@@ -10,7 +9,7 @@ export function authMiddleware(req: Request, res: Response, next: NextFunction) 
     }
     const token = req.headers.authorization.replace('Bearer ', '');
     try {
-        jsonwebtoken.verify(token, getConfigValue('JWT_SECRET'));
+        verifyToken(token);
         next();
     } catch (error) {
         res.status(401).json({ success: false, message: "Unauthorized" });

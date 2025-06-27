@@ -7,7 +7,7 @@ interface IUserMethods {
     getJson(): Object;
 }
 
-interface IUser extends Document, IUserMethods {
+export interface IUser extends Document, IUserMethods {
     email: string,
     username: string,
     password: string,
