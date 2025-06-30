@@ -1,9 +1,11 @@
-import http from "http";
 import express from 'express';
 import 'dotenv/config';
 import { router as authRouter } from './routes/auth';
+import { router as postsRouter } from './routes/posts';
+import { router as mediaRouter } from './routes/media';
 import { getConfigValue } from "./helper/configHelper";
 import mongoose from "mongoose";
+import path from 'path';
 
 export const app: express.Application = express();
 
@@ -12,6 +14,9 @@ const mongoString: string = getConfigValue('DB_CONN_STRING');
 
 app.use(express.json());
 app.use('/api/auth', authRouter);
+app.use('/api/posts', postsRouter);
+app.use('/api/media', mediaRouter);
+app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 app.get('/', (req, res) => {
     res.send(JSON.stringify({ message: "Hello world!" }));
 });

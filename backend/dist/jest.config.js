@@ -1,3 +1,4 @@
+"use strict";
 // jest.config.js
 module.exports = {
     preset: 'ts-jest',
@@ -7,4 +8,3 @@ module.exports = {
     },
     testPathIgnorePatterns: ['<rootDir>/dist/']
 };
-

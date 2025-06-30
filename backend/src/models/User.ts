@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import { Schema, model, Document } from "mongoose";
 import bcrypt from 'bcrypt';
 
@@ -7,7 +6,7 @@ interface IUserMethods {
     getJson(): Object;
 }
 
-export interface IUser extends Document, IUserMethods {
+export interface IUser extends Document<string>, IUserMethods {
     email: string,
     username: string,
     password: string,
@@ -28,7 +27,7 @@ const userSchema = new Schema<IUser>({
         type: String,
         required: true
     }
-});
+}, { timestamps: true });
 
 userSchema.pre('save', async function(next) {
     // when saving an existing user
@@ -40,11 +39,18 @@ userSchema.pre('save', async function(next) {
     next();
 });
 
+userSchema.set('toJSON', {
+    transform: (doc, ret) => {
+        ret.id = ret._id;
+        delete ret._id;
+        delete ret.__v;
+        delete ret.password;
+        return ret;
+    }
+});
+
 userSchema.methods.matchPassword = async function(this: IUser, enteredPassword: string): Promise<Boolean> {
     return await bcrypt.compare(enteredPassword, this.password);
-}
-userSchema.methods.getJson = function(this: IUser): Object {
-    return { id: this._id, username: this.username, email: this.email };
 }
 
 export const User = model<IUser>('User', userSchema);

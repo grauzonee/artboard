@@ -5,22 +5,37 @@ import { Request, Response } from 'express';
 
 jest.mock('../../src/helper/auth/utils', () => ({
     generateToken: jest.fn().mockReturnValue('some_token'),
-    verifyToken: jest.fn()
+    verifyToken: jest.fn(),
+    getUserByToken: jest.fn()
 }));
-import { generateToken, verifyToken } from '../../src/helper/auth/utils';
+import { generateToken, getUserByToken, verifyToken } from '../../src/helper/auth/utils';
 
 const ORIGINAL_ENV = process.env;
 beforeEach(() => {
     jest.resetAllMocks();
     jest.resetModules();
-    process.env = { ...ORIGINAL_ENV, JWT_SECRET: 'test-secret' }
+    process.env = { ...ORIGINAL_ENV, JWT_SECRET: 'test-secret' };
+    (resolvedUser.toJSON as jest.Mock).mockReturnValue({
+        id: 'hss123',
+        username: "test",
+        email: "test123@gmail.com",
+        createdAt: createdAt.toJSON(),
+    })
 });
 
 afterEach(() => {
     process.env = ORIGINAL_ENV;
 });
-
-const resolvedUser = { _id: 'hss123', username: "test", password: "password123", email: "test123@gmail.com" };
+const createdAt = new Date();
+const resolvedUser = {
+    _id: 'hss123',
+    username: "test",
+    password: "password123",
+    email: "test123@gmail.com",
+    createdAt: createdAt,
+    updatedAt: createdAt,
+    toJSON: jest.fn()
+};
 
 describe("registerUser function", () => {
     let req: Request;
@@ -42,9 +57,10 @@ describe("registerUser function", () => {
 
         expect(User.create).toHaveBeenCalledTimes(0);
         expect(res.status).toHaveBeenCalledWith(400);
-        expect(res.json).toHaveBeenCalledWith({ success: false, message: "User already exists" });
+        expect(res.json).toHaveBeenCalledWith({ success: false, message: "Email already in use" });
     });
     test("should call User.create when registering", async () => {
+        console.log(resolvedUser);
         (User.create as jest.Mock).mockResolvedValue(resolvedUser);
         (generateToken as jest.Mock).mockReturnValue('test_token');
         await registerUser(req, res);
@@ -53,10 +69,11 @@ describe("registerUser function", () => {
         expect(res.json).toHaveBeenCalledWith({
             success: true,
             data: expect.objectContaining({
-                _id: resolvedUser._id,
+                id: resolvedUser._id,
                 username: resolvedUser.username,
                 email: resolvedUser.email,
-                token: expect.any(String)
+                token: expect.any(String),
+                createdAt: createdAt.toJSON()
             })
         });
     });
@@ -65,7 +82,7 @@ describe("registerUser function", () => {
         (User.findOne as jest.Mock).mockResolvedValue(null);
 
         await registerUser(req, res);
-        expect(User.findOne).toHaveBeenCalledTimes(1);
+        expect(User.findOne).toHaveBeenCalledTimes(2);
         expect(User.create).toHaveBeenCalledTimes(1);
         expect(res.status).toHaveBeenCalledWith(400);
         expect(res.json).toHaveBeenCalledWith({ success: false, message: "Invalid user data" });
@@ -103,10 +120,11 @@ describe("loginUser function", () => {
         expect(res.json).toHaveBeenCalledWith({
             success: true,
             data: expect.objectContaining({
-                _id: mockedUserObject._id,
+                id: mockedUserObject._id,
                 username: mockedUserObject.username,
                 email: mockedUserObject.email,
-                token: expect.any(String)
+                token: expect.any(String),
+                createdAt: createdAt.toJSON()
             })
         });
     });
@@ -131,8 +149,8 @@ describe("loginUser function", () => {
 // Get profile
 describe("getProfile function", () => {
     test("should return profile when user was found", async () => {
-        (verifyToken as jest.Mock).mockReturnValue({ id: resolvedUser._id });
-        (User.findById as jest.Mock).mockResolvedValue(resolvedUser);
+        (getUserByToken as jest.Mock).mockReturnValue(resolvedUser);
+
         let req: Request = {
             headers: {
                 authorization: "Bearer 24r32"
@@ -143,17 +161,16 @@ describe("getProfile function", () => {
             json: jest.fn()
         } as any;
         await getProfile(req, res);
-        expect(verifyToken).toHaveBeenCalledTimes(1);
-        expect(User.findById).toHaveBeenCalledTimes(1);
+        expect(getUserByToken).toHaveBeenCalledTimes(1);
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({
             success: true,
-            data: expect.objectContaining({
-                _id: resolvedUser._id,
+            data: {
+                id: resolvedUser._id,
                 username: resolvedUser.username,
                 email: resolvedUser.email,
-                token: expect.any(String)
-            })
+                createdAt: createdAt.toJSON()
+            }
         });
     });
 });

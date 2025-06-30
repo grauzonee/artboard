@@ -1,15 +1,16 @@
 import { Request, Response, NextFunction } from 'express';
-import { verifyToken } from 'helper/auth/utils';
+import { getUserByToken } from '../helper/auth/utils';
+import { IUser } from '../models/User';
 
 // Checks whether Bearer token is valid
-export function authMiddleware(req: Request, res: Response, next: NextFunction) {
+export async function authMiddleware(req: Request, res: Response, next: NextFunction) {
     if (!req.headers.authorization) {
         res.status(401).json({ success: false, message: "Unauthorized" });
         return;
     }
-    const token = req.headers.authorization.replace('Bearer ', '');
     try {
-        verifyToken(token);
+        const user: IUser = await getUserByToken(req);
+        req.user = user;
         next();
     } catch (error) {
         res.status(401).json({ success: false, message: "Unauthorized" });
