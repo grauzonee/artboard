@@ -2,7 +2,8 @@ import { Post, IPost } from '../models/Post';
 import { Request, Response } from 'express';
 
 export async function getPosts(req: Request, res: Response) {
-    const posts = await Post.find().populate('author', 'username');
+
+    const posts = await Post.find(req.dbFilter ?? {}).sort(req.dbSort ?? {}).populate('author', 'username');
     res.status(200).json({ success: true, data: posts });
 }
 

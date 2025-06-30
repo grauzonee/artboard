@@ -1,7 +1,7 @@
-import { Schema, model, Document, } from "mongoose";
+import { Schema, model, Document, Model } from "mongoose";
 import { User } from './User';
 
-export interface IPost extends Document {
+export interface IPost extends Document<String> {
     title: string,
     content: string,
     imageUrl: string,
@@ -9,6 +9,10 @@ export interface IPost extends Document {
     materials: string[],
     createdAt?: Date,
     updatedAt?: Date
+}
+
+export interface IPostModel extends Model<IPost> {
+    getSortableFields(): string[];
 }
 
 const postSchema = new Schema<IPost>({
@@ -40,5 +44,9 @@ postSchema.set('toJSON', {
         delete ret.__v;
         return ret;
     }
-})
-export const Post = model<IPost>('Post', postSchema);
+});
+postSchema.statics.getSortableFields = () => {
+    return ['createdAt'];
+}
+
+export const Post = model<IPost, IPostModel>('Post', postSchema);
