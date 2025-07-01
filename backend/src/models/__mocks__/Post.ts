@@ -3,5 +3,6 @@ export const Post = {
     find: jest.fn(),
     findOne: jest.fn(),
     findById: jest.fn(),
-    matchPassword: jest.fn()
+    matchPassword: jest.fn(),
+    findOneAndDelete: jest.fn()
 }

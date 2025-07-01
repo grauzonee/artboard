@@ -1,3 +1,15 @@
+export function checkAllRequiredVars() {
+    const requiredVars = [
+        'NODE_ENV',
+        'PORT',
+        'DB_CONN_STRING',
+        'JWT_SECRET'
+    ];
+    requiredVars.forEach((varName) => {
+        getConfigValue(varName);
+    })
+}
+
 export function getConfigValue(fieldName: string): string {
     const value = process.env[fieldName];
     if (value === undefined) {

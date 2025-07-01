@@ -3,6 +3,11 @@ import { FilterList } from '../middleware/filterMiddleware';
 export const postFilterList: FilterList = {
     fields: [
         {
+            id: {
+                originalField: '_id'
+            }
+        },
+        {
             createdAtFrom: {
                 originalField: 'createdAt',
                 operand: 'gte'

@@ -10,7 +10,7 @@
     "build": "tsc",
     "dev": "ts-node-dev --respawn src/index.ts",
     "start": "nodemon src/index.ts",
-    "test": "jest", 
+    "test": "jest",
     "test posts": "jest ./tests/controllers/postController.test.ts"
   },
   "dependencies": {
@@ -30,7 +30,8 @@
     "mongoose": "^8.16.0",
     "multer": "^2.0.1",
     "passport": "^0.7.0",
-    "passport-jwt": "^4.0.1"
+    "passport-jwt": "^4.0.1",
+    "winston": "^3.17.0"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",

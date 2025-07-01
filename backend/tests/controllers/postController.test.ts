@@ -1,4 +1,4 @@
-import { createPost, getPosts } from '../../src/controllers/postController';
+import { createPost, getPosts, deletePost, updatePost } from '../../src/controllers/postController';
 jest.mock('../../src/models/Post');
 import { Post } from '../../src/models/Post';
 import { Request, Response } from 'express';
@@ -12,6 +12,7 @@ beforeEach(() => {
 describe("getPosts function", () => {
     test("return empty array when there are no posts", async () => {
         (Post.find as jest.Mock).mockReturnValue({
+            sort: jest.fn().mockReturnThis(),
             populate: jest.fn().mockReturnValue([])
         });
         const req = {} as any;
@@ -39,6 +40,7 @@ describe("getPosts function", () => {
             updatedAt: createdAt
         }];
         (Post.find as jest.Mock).mockReturnValue({
+            sort: jest.fn().mockReturnThis(),
             populate: jest.fn().mockReturnValue(postCollection)
         });
         const req = {} as any;
@@ -156,3 +158,98 @@ describe("createPost function", () => {
         expect(res.json).toHaveBeenCalledWith({ success: false, message: expect.any(String) });
     });
 });
+
+describe('updatePost function', () => {
+    test("Should return 200 when post was found", async () => {
+        const returnedPost = {
+            title: "First title",
+            content: "First content",
+            imageUrl: "firstUrl",
+            materials: ["First"],
+            author: "author-id",
+            createdAt: createdAt,
+            updatedAt: createdAt,
+            save: jest.fn()
+        }
+        returnedPost.save.mockResolvedValue(returnedPost);
+        (Post.findOne as jest.Mock).mockResolvedValue(returnedPost);
+        const req = {
+            params: {
+                id: "123"
+            },
+            body: {
+                title: "Trying out oil pastels",
+                content: "This image was drawn today...",
+                imageUrl: "uploads/68600b2321b078541b943d5d//1751140112501-green-bologna.jpg",
+                materials: ["oil pastels"],
+            }
+        } as any;
+        const res = {
+            status: jest.fn().mockReturnThis(),
+            json: jest.fn()
+        } as any;
+        await updatePost(req, res);
+        expect(returnedPost.title).toBe(req.body.title);
+        expect(returnedPost.content).toBe(req.body.content);
+        expect(returnedPost.imageUrl).toBe(req.body.imageUrl);
+        expect(returnedPost.materials).toBe(req.body.materials);
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.json).toHaveBeenCalledWith({
+            success: true, data: {
+                title: returnedPost.title,
+                content: returnedPost.content,
+                imageUrl: returnedPost.imageUrl,
+                author: returnedPost.author,
+                materials: returnedPost.materials,
+                createdAt: returnedPost.createdAt,
+                updatedAt: returnedPost.createdAt
+            }
+        });
+    });
+    test("Should return 404 when post was not found", async () => {
+
+        (Post.findOne as jest.Mock).mockResolvedValue(undefined);
+        const req = {
+            params: {
+                id: "123"
+            },
+            body: {
+                title: "Trying out oil pastels",
+                content: "This image was drawn today...",
+                imageUrl: "uploads/68600b2321b078541b943d5d//1751140112501-green-bologna.jpg",
+                materials: ["oil pastels"],
+            }
+        } as any;
+        const res = {
+            status: jest.fn().mockReturnThis(),
+            json: jest.fn()
+        } as any;
+        await updatePost(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(404);
+        expect(res.json).toHaveBeenCalledWith({ success: false, message: "Post not found" });
+    })
+});
+
+describe("deletePost function", () => {
+    test("should return 200 when post was found", async () => {
+        const deletedPost = {
+            _id: "123",
+            title: "Some title",
+            imageUrl: "someURL"
+        };
+        const req = {
+            params: {
+                id: "123"
+            }
+        } as any;
+        const res = {
+            status: jest.fn().mockReturnThis(),
+            json: jest.fn()
+        } as any;
+        (Post.findOneAndDelete as jest.Mock).mockResolvedValue(deletedPost);
+        await deletePost(req, res);
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.json).toHaveBeenCalledWith({ success: true, message: "Post deleted successfully" });
+    })
+})

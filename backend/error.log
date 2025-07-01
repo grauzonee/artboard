@@ -1,0 +1,12 @@
+{"level":"error","message":"ENOENT: no such file or directory, unlink 'uploads/68600b2321b078541b943d5d/1751310088444-retro-bologna.jpg'","service":"user-service"}
+{"code":"ENOENT","errno":-2,"level":"error","path":"firstUrl","service":"user-service","syscall":"unlink"}
+{"code":"ENOENT","errno":-2,"level":"error","path":"firstUrl","service":"user-service","syscall":"unlink"}
+{"code":"ENOENT","errno":-2,"level":"error","path":"firstUrl","service":"user-service","syscall":"unlink"}
+{"code":"ENOENT","errno":-2,"level":"error","path":"firstUrl","service":"user-service","syscall":"unlink"}
+{"code":"ENOENT","errno":-2,"level":"error","path":"firstUrl","service":"user-service","syscall":"unlink"}
+{"code":"ENOENT","errno":-2,"level":"error","path":"firstUrl","service":"user-service","syscall":"unlink"}
+{"code":"ENOENT","errno":-2,"level":"error","path":"firstUrl","service":"user-service","syscall":"unlink"}
+{"code":"ENOENT","errno":-2,"level":"error","path":"firstUrl","service":"user-service","syscall":"unlink"}
+{"code":"ENOENT","errno":-2,"level":"error","path":"firstUrl","service":"user-service","syscall":"unlink"}
+{"code":"ENOENT","errno":-2,"level":"error","path":"firstUrl","service":"user-service","syscall":"unlink"}
+{"code":"ENOENT","errno":-2,"level":"error","path":"someURL","service":"user-service","syscall":"unlink"}

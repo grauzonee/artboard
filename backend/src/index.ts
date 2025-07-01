@@ -3,10 +3,10 @@ import 'dotenv/config';
 import { router as authRouter } from './routes/auth';
 import { router as postsRouter } from './routes/posts';
 import { router as mediaRouter } from './routes/media';
-import { getConfigValue } from "./helper/configHelper";
+import { checkAllRequiredVars, getConfigValue } from "./helper/configHelper";
 import mongoose from "mongoose";
 import path from 'path';
-
+checkAllRequiredVars();
 export const app: express.Application = express();
 
 const port: number = parseInt(getConfigValue('PORT'));

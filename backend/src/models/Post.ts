@@ -1,11 +1,12 @@
-import { Schema, model, Document, Model } from "mongoose";
+import { Schema, model, Document, Model, Types } from "mongoose";
+import mongoose from "mongoose";
 import { User } from './User';
 
 export interface IPost extends Document<String> {
     title: string,
     content: string,
     imageUrl: string,
-    author: Schema.Types.ObjectId,
+    author: Types.ObjectId,
     materials: string[],
     createdAt?: Date,
     updatedAt?: Date
@@ -28,7 +29,7 @@ const postSchema = new Schema<IPost>({
         required: true
     },
     author: {
-        type: Schema.Types.ObjectId,
+        type: mongoose.SchemaTypes.ObjectId,
         ref: 'User',
         required: true
     },
