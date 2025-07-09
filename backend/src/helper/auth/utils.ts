@@ -11,7 +11,7 @@ export const generateToken = (id: string) => {
 export const verifyToken = (token: string): JwtPayload => {
     try {
         return jsonwebtoken.verify(token, getConfigValue('JWT_SECRET')) as JwtPayload;
-    } catch (err) {
+    } catch {
         throw Error("Not authorized");
     }
 }

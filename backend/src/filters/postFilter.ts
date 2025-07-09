@@ -1,27 +1,12 @@
-import { FilterList } from '../middleware/filterMiddleware';
+import { FilterList, TimeFilter } from '../middleware/filterMiddleware';
 
 export const postFilterList: FilterList = {
     fields: [
-        {
-            id: {
-                originalField: '_id'
-            }
-        },
-        {
-            createdAtFrom: {
-                originalField: 'createdAt',
-                operand: 'gte'
-            }
-        },
-        {
-            createdAtTill: {
-                originalField: 'createdAt',
-                operand: 'lte'
-            }
-        },
+        ...TimeFilter.fields,
         {
             author: {
-                isId: true
+                isId: true,
+                operand: 'eq'
             }
         },
         {

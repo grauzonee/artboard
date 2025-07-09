@@ -1,4 +1,4 @@
-import { Post, IPost } from '../models/Post';
+import { Post } from '../models/Post';
 import { Request, Response } from 'express';
 import { deleteImage } from './mediaController';
 import { logger } from '../helper/loggerHelper';
@@ -40,7 +40,7 @@ export async function deletePost(req: Request, res: Response) {
     if (!deletedPost) {
         return res.status(404).json({ success: false, message: "Post was not found" });
     }
-    let message = "Post deleted successfully";
+    const message = "Post deleted successfully";
     try {
         await deleteImage(deletedPost.imageUrl);
     } catch (error) {

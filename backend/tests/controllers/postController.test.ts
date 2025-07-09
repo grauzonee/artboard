@@ -2,6 +2,8 @@ import { createPost, getPosts, deletePost, updatePost } from '../../src/controll
 jest.mock('../../src/models/Post');
 import { Post } from '../../src/models/Post';
 import { Request, Response } from 'express';
+jest.mock('../../src/controllers/mediaController');
+import { deleteImage } from '../../src/controllers/mediaController';
 
 const createdAt = Date();
 
@@ -161,6 +163,7 @@ describe("createPost function", () => {
 
 describe('updatePost function', () => {
     test("Should return 200 when post was found", async () => {
+        (deleteImage as jest.Mock).mockResolvedValue(true);
         const returnedPost = {
             title: "First title",
             content: "First content",
@@ -202,7 +205,8 @@ describe('updatePost function', () => {
                 author: returnedPost.author,
                 materials: returnedPost.materials,
                 createdAt: returnedPost.createdAt,
-                updatedAt: returnedPost.createdAt
+                updatedAt: returnedPost.createdAt,
+                save: expect.any(Function)
             }
         });
     });

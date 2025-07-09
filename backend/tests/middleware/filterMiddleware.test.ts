@@ -14,10 +14,9 @@ describe("filterMiddleware function", () => {
     test("should return filter for fields with no operands defined", () => {
         req.query.author = "68600b2321b078541b943d5d";
 
-
         const nextFunction = jest.fn() as any;
         filterMiddleware(postFilterList)(req, res, nextFunction);
-        expect(req.dbFilter).toMatchObject({ author: new mongoose.Types.ObjectId("68600b2321b078541b943d5d") });
+        expect(req.dbFilter).toMatchObject({ author: { $eq: new mongoose.Types.ObjectId("68600b2321b078541b943d5d") } });
     });
     test("should return error for id shorter/longer than 24", () => {
         req.query.author = "68600b2321b078541b943d5df";

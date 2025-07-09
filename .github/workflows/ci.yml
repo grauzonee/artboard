@@ -1,0 +1,41 @@
+name: Lint & Test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: ⚙️ Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 24
+
+      - name: 📦 Install frontend dependencies
+        working-directory: ./frontend
+        run: npm install
+
+      - name: 🧹 Lint frontend
+        working-directory: ./frontend
+        run: npm run lint
+
+      # --- Backend ---
+      - name: 📦 Install backend dependencies
+        working-directory: ./backend
+        run: npm install
+
+      - name: 🧹 Lint backend
+        working-directory: ./backend
+        run: npm run lint
+
+      - name: ✅ Test backend
+        working-directory: ./backend
+        run: npm run test

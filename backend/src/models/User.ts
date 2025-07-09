@@ -2,8 +2,8 @@ import { Schema, model, Document } from "mongoose";
 import bcrypt from 'bcrypt';
 
 interface IUserMethods {
-    matchPassword(enteredPassword: string): Promise<Boolean>;
-    getJson(): Object;
+    matchPassword(enteredPassword: string): Promise<boolean>;
+    getJson(): object;
 }
 
 export interface IUser extends Document<string>, IUserMethods {
@@ -49,7 +49,7 @@ userSchema.set('toJSON', {
     }
 });
 
-userSchema.methods.matchPassword = async function(this: IUser, enteredPassword: string): Promise<Boolean> {
+userSchema.methods.matchPassword = async function(this: IUser, enteredPassword: string): Promise<boolean> {
     return await bcrypt.compare(enteredPassword, this.password);
 }
 

@@ -60,7 +60,6 @@ describe("registerUser function", () => {
         expect(res.json).toHaveBeenCalledWith({ success: false, message: "Email already in use" });
     });
     test("should call User.create when registering", async () => {
-        console.log(resolvedUser);
         (User.create as jest.Mock).mockResolvedValue(resolvedUser);
         (generateToken as jest.Mock).mockReturnValue('test_token');
         await registerUser(req, res);
