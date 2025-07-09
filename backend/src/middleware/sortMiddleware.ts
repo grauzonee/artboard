@@ -1,5 +1,4 @@
 import { Request, Response, NextFunction } from 'express';
-import { Document } from 'mongoose';
 
 
 export const sortMiddleware = (entity: { getSortableFields(): string[] }) => {

@@ -1,8 +1,7 @@
 import { Schema, model, Document, Model, Types } from "mongoose";
 import mongoose from "mongoose";
-import { User } from './User';
 
-export interface IPost extends Document<String> {
+export interface IPost extends Document<string> {
     title: string,
     content: string,
     imageUrl: string,
