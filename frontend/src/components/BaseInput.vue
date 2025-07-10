@@ -97,7 +97,8 @@ onMounted(() => {
       v-if="label"
       class="ml-3 font-poppins font-semibold text-black"
       :style="labelStyles"
-    >{{ label }}</label>
+      >{{ label }}</label
+    >
     <transition name="input">
       <input
         v-if="showInput"
@@ -107,7 +108,7 @@ onMounted(() => {
         :placeholder="placeholder"
         :style="inputStyles"
         @input="onInput"
-      >
+      />
     </transition>
   </div>
 </template>

@@ -3,7 +3,11 @@ module.exports = {
     preset: 'ts-jest',
     testEnvironment: 'node',
     moduleNameMapper: {
-        '^@/(.*)$': '<rootDir>/src/$1', // Optional: if you're using path aliases
+        '^@models/(.*)$': '<rootDir>/src/models/$1',
+        '^@controllers/(.*)$': '<rootDir>/src/controllers/$1',
+        '^@helper/(.*)$': '<rootDir>/src/helper/$1',
+        '^@routes/(.*)$': '<rootDir>/src/routes/$1',
+        '^@utils/(.*)$': '<rootDir>/src/utils/$1',
     },
     testPathIgnorePatterns: ['<rootDir>/dist/']
 };

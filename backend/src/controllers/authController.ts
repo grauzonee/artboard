@@ -1,5 +1,5 @@
-import { User, IUser } from '../models/User';
-import { generateToken, getUserByToken } from '../helper/auth/utils';
+import { User } from '@models/User';
+import { generateToken } from '@helper/auth/utils';
 import { Response, Request } from 'express';
 
 
@@ -41,15 +41,4 @@ export const loginUser = async (req: Request, res: Response) => {
         return res.status(200).json({ success: true, data: responseData });
     }
     return res.status(400).json({ success: false, message: "Invalid password" });
-}
-
-export const getProfile = async (req: Request, res: Response) => {
-    try {
-        const user: IUser = await getUserByToken(req);
-        res.status(200).json(
-            { success: true, data: user.toJSON() }
-        );
-    } catch (error) {
-        return res.status(401).json({ success: false, message: error });
-    }
 }

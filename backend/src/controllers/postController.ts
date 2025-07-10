@@ -1,7 +1,7 @@
-import { Post } from '../models/Post';
+import { Post } from '@models/Post';
 import { Request, Response } from 'express';
-import { deleteImage } from './mediaController';
-import { logger } from '../helper/loggerHelper';
+import { deleteImage } from '@controllers/mediaController';
+import { logger } from '@helper/loggerHelper';
 
 export async function getPosts(req: Request, res: Response) {
 

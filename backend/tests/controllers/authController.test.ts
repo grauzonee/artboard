@@ -1,4 +1,4 @@
-import { registerUser, loginUser, getProfile } from '../../src/controllers/authController';
+import { registerUser, loginUser } from '../../src/controllers/authController';
 jest.mock('../../src/models/User');
 import { IUser, User } from '../../src/models/User';
 import { Request, Response } from 'express';
@@ -20,6 +20,11 @@ beforeEach(() => {
         username: "test",
         email: "test123@gmail.com",
         createdAt: createdAt.toJSON(),
+        name: null,
+        surname: null,
+        country: null,
+        city: null,
+        birthdate: null,
     })
 });
 
@@ -72,7 +77,12 @@ describe("registerUser function", () => {
                 username: resolvedUser.username,
                 email: resolvedUser.email,
                 token: expect.any(String),
-                createdAt: createdAt.toJSON()
+                createdAt: createdAt.toJSON(),
+                name: null,
+                surname: null,
+                country: null,
+                city: null,
+                birthdate: null,
             })
         });
     });
@@ -123,7 +133,12 @@ describe("loginUser function", () => {
                 username: mockedUserObject.username,
                 email: mockedUserObject.email,
                 token: expect.any(String),
-                createdAt: createdAt.toJSON()
+                createdAt: createdAt.toJSON(),
+                name: null,
+                surname: null,
+                country: null,
+                city: null,
+                birthdate: null,
             })
         });
     });
@@ -146,31 +161,3 @@ describe("loginUser function", () => {
     });
 })
 // Get profile
-describe("getProfile function", () => {
-    test("should return profile when user was found", async () => {
-        (getUserByToken as jest.Mock).mockReturnValue(resolvedUser);
-
-        let req: Request = {
-            headers: {
-                authorization: "Bearer 24r32"
-            }
-        } as any;
-        let res: Response = {
-            status: jest.fn().mockReturnThis(),
-            json: jest.fn()
-        } as any;
-        await getProfile(req, res);
-        expect(getUserByToken).toHaveBeenCalledTimes(1);
-        expect(res.status).toHaveBeenCalledWith(200);
-        expect(res.json).toHaveBeenCalledWith({
-            success: true,
-            data: {
-                id: resolvedUser._id,
-                username: resolvedUser.username,
-                email: resolvedUser.email,
-                createdAt: createdAt.toJSON()
-            }
-        });
-    });
-});
-

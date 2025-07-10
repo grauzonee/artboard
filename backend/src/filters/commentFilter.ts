@@ -5,12 +5,14 @@ export const commentFilter: FilterList = {
         ...TimeFilter.fields,
         {
             author: {
-                isId: true
+                isId: true,
+                operand: 'eq'
             }
         },
         {
             post: {
-                isId: true
+                isId: true,
+                operand: 'eq'
             }
         }
     ]
