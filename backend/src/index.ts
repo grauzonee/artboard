@@ -1,14 +1,14 @@
 import express from 'express';
 import 'dotenv/config';
-import { router as authRouter } from './routes/auth';
-import { router as postsRouter } from './routes/posts';
-import { router as mediaRouter } from './routes/media';
-import { router as commentRouter } from './routes/comments';
-import { checkAllRequiredVars, getConfigValue } from "./helper/configHelper";
+import { router as authRouter } from '@routes/auth';
+import { router as postsRouter } from '@routes/posts';
+import { router as mediaRouter } from '@routes/media';
+import { router as commentRouter } from '@routes/comments';
+import { router as userRouter } from '@routes/user';
+import { checkAllRequiredVars, getConfigValue } from "@helper/configHelper";
 import mongoose from "mongoose";
 import path from 'path';
 import cors from 'cors';
-
 
 checkAllRequiredVars();
 export const app: express.Application = express();
@@ -19,6 +19,7 @@ const mongoString: string = getConfigValue('DB_CONN_STRING');
 app.use(cors());
 app.use(express.json());
 app.use('/api/auth', authRouter);
+app.use('/api/profile', userRouter);
 app.use('/api/posts', postsRouter);
 app.use('/api/media', mediaRouter);
 app.use('/api/comments', commentRouter);

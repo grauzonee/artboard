@@ -8,9 +8,9 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "dev": "ts-node-dev --respawn src/index.ts",
+    "dev": "ts-node-dev --respawn -r tsconfig-paths/register src/index.ts",
     "start": "nodemon src/index.ts",
-    "test": "jest",
+    "test": "jest --coverage",
     "lint": "eslint src --ext .ts"
   },
   "dependencies": {
