@@ -1,8 +1,11 @@
-import { User } from '@models/User';
+import { User, IUser } from '@models/User';
 import { generateToken } from '@helper/auth/utils';
 import { Response, Request } from 'express';
 
 
+export interface AuthRequest extends Request {
+    user: IUser;
+}
 
 export const registerUser = async (req: Request, res: Response) => {
     const { username, email, password } = req.body;

@@ -1,7 +1,8 @@
-import { getProfile, updateUser } from '@controllers/userController'
+import { getProfile, updatePassword, updateUser } from '@controllers/userController'
 import { getUserByToken } from '@helper/auth/utils';
 import { IUser, User } from '@models/User';
 import { Request, Response } from 'express';
+import { AuthRequest } from '@controllers/authController';
 import { checkImage } from '@controllers/mediaController';
 jest.mock('@controllers/mediaController');
 
@@ -49,7 +50,7 @@ describe("getProfile function", () => {
     test("should return profile when user was found", async () => {
         (getUserByToken as jest.Mock).mockReturnValue(resolvedUser);
 
-        let req: Request = {
+        let req: AuthRequest = {
             headers: {
                 authorization: "Bearer 24r32"
             }
@@ -80,7 +81,7 @@ describe("getProfile function", () => {
 
 describe("updateProfile function", () => {
     test("should return 401 on empty body", async () => {
-        let req: Request = {
+        let req: AuthRequest = {
             headers: {
                 authorization: "Bearer 123"
             },
@@ -104,7 +105,7 @@ describe("updateProfile function", () => {
         });
         (getUserByToken as jest.Mock).mockReturnValue(mockUser);
         mockUser.save = jest.fn().mockResolvedValue(mockUser);
-        let req: Request = {
+        let req: AuthRequest = {
             headers: {
                 authorization: "Bearer 123"
             },
@@ -128,7 +129,7 @@ describe("updateProfile function", () => {
             password: 'hashed',
         });
         (getUserByToken as jest.Mock).mockReturnValue(mockUser);
-        let req: Request = {
+        let req: AuthRequest = {
             headers: {
                 authorization: "Bearer 123"
             },
@@ -154,7 +155,7 @@ describe("updateProfile function", () => {
         mockUser.save = jest.fn().mockResolvedValue(mockUser);
         (checkImage as jest.Mock).mockReturnValue(true);
 
-        let req: Request = {
+        let req: AuthRequest = {
             headers: {
                 authorization: "Bearer 123"
             },
@@ -173,21 +174,82 @@ describe("updateProfile function", () => {
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({ success: true, data: mockUser.toJSON() });
     })
-    test("should return 400 when unauthorized", async () => {
-        let req: Request = {
+})
+
+describe("updatePassword function", () => {
+    test("should return 401 when passwords are equal", async () => {
+        const mockUser = new User({
+            username: 'test',
+            email: 'test@test.com',
+            password: 'hashed',
+        });
+        (getUserByToken as jest.Mock).mockReturnValue(mockUser);
+        let req: AuthRequest = {
             headers: {
                 authorization: "Bearer 123"
             },
-            body: { name: "Karina" },
+            body: { oldPassword: "Karina1", newPassword: "Karina1" },
+            user: mockUser
         } as any;
         let res: Response = {
             status: jest.fn().mockReturnThis(),
             json: jest.fn()
         } as any;
 
-        await updateUser(req, res);
-        expect(res.status).toHaveBeenCalledWith(400);
-        expect(res.json).toHaveBeenCalledWith({ success: false, message: "Unauthorized" });
+        await updatePassword(req, res);
+        expect(res.status).toHaveBeenCalledWith(401);
+        expect(res.json).toHaveBeenCalledWith({ success: false, message: "Passwords are equal!" });
+    })
+    test("should return 401 when old password is wrong", async () => {
+        const mockUser = new User({
+            username: 'test',
+            email: 'test@test.com',
+            password: 'hashed',
+        });
+        (getUserByToken as jest.Mock).mockReturnValue(mockUser);
+        mockUser.matchPassword = jest.fn().mockResolvedValue(false);
+        let req: AuthRequest = {
+            headers: {
+                authorization: "Bearer 123"
+            },
+            body: { oldPassword: "Karina", newPassword: "Karina1" },
+            user: mockUser
+        } as any;
+        let res: Response = {
+            status: jest.fn().mockReturnThis(),
+            json: jest.fn()
+        } as any;
+
+        await updatePassword(req, res);
+        expect(res.status).toHaveBeenCalledWith(401);
+        expect(res.json).toHaveBeenCalledWith({ success: false, message: "Old password is not correct!" });
+    })
+    test("should return 200 when passwords was changed", async () => {
+
+        const mockUser = new User({
+            username: 'test',
+            email: 'test@test.com',
+            password: 'hashed',
+        });
+        (getUserByToken as jest.Mock).mockReturnValue(mockUser);
+        mockUser.matchPassword = jest.fn().mockResolvedValue(true);
+        mockUser.save = jest.fn().mockResolvedValue(mockUser);
+        let req: AuthRequest = {
+            headers: {
+                authorization: "Bearer 123"
+            },
+            body: { oldPassword: "Karina1", newPassword: "Karina12" },
+            user: mockUser
+        } as any;
+        let res: Response = {
+            status: jest.fn().mockReturnThis(),
+            json: jest.fn()
+        } as any;
+
+        await updatePassword(req, res);
+        expect(mockUser.save).toHaveBeenCalledTimes(1);
+        expect(mockUser.matchPassword).toHaveBeenCalledTimes(1);
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.json).toHaveBeenCalledWith({ success: true, message: "Password has been updated" });
     })
 })
-

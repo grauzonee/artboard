@@ -6,7 +6,8 @@ import { checkImage } from "@controllers/mediaController";
 interface IUserMethods {
     matchPassword(enteredPassword: string): Promise<boolean>;
     getJson(): object;
-    updateProfile(data: UpdateUserData): Promise<IUser>
+    updateProfile(data: UpdateUserData): Promise<IUser>,
+    updatePassword(data: UpdatePasswordData): Promise<void>
 }
 
 export interface IUser extends Document<string>, IUserMethods {
@@ -22,6 +23,10 @@ export interface IUser extends Document<string>, IUserMethods {
 }
 
 export type UpdateUserData = Partial<Pick<IUser, 'username' | 'name' | 'surname' | 'country' | 'city' | 'birthdate' | 'avatar'>>
+export interface UpdatePasswordData {
+    oldPassword: string,
+    newPassword: string
+}
 
 const userSchema = new Schema<IUser>({
     username: {
@@ -112,6 +117,20 @@ userSchema.methods.updateProfile = async function(this: IUser, data: UpdateUserD
 
     await this.save();
     return this;
+}
+
+userSchema.methods.updatePassword = async function(this: IUser, data: UpdatePasswordData): Promise<void> {
+    if (data.newPassword === data.oldPassword) {
+        throw new Error("Passwords are equal!");
+    }
+    const isPassCorrect = await this.matchPassword(data.oldPassword);
+    if (!isPassCorrect) {
+        throw new Error("Old password is not correct!");
+    }
+    this.password = data.newPassword;
+
+
+    await this.save();
 }
 
 export const User = model<IUser>('User', userSchema);

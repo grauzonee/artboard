@@ -1,14 +1,12 @@
-import { Request, Response } from 'express'
+import { Response } from 'express'
 import { IUser } from "@models/User"
 import { getUserByToken } from '@helper/auth/utils';
+import { AuthRequest } from '@controllers/authController';
 
-export async function updateUser(req: Request, res: Response) {
+export async function updateUser(req: AuthRequest, res: Response) {
     const requestData = req.body;
     if (requestData === undefined) {
         return res.status(401).json({ success: false, message: "Empty body is not allowed" });
-    }
-    if (!req.user) {
-        return res.status(400).json({ success: false, message: "Unauthorized" });
     }
     try {
         const user = await req.user.updateProfile(requestData);
@@ -18,7 +16,7 @@ export async function updateUser(req: Request, res: Response) {
     }
 }
 
-export const getProfile = async (req: Request, res: Response) => {
+export const getProfile = async (req: AuthRequest, res: Response) => {
     try {
         const user: IUser = await getUserByToken(req);
         res.status(200).json(
@@ -26,5 +24,15 @@ export const getProfile = async (req: Request, res: Response) => {
         );
     } catch (error) {
         return res.status(401).json({ success: false, message: error });
+    }
+}
+
+export async function updatePassword(req: AuthRequest, res: Response) {
+    const requestData = req.body;
+    try {
+        await req.user.updatePassword(requestData);
+        return res.status(200).json({ success: true, message: "Password has been updated" });
+    } catch (error) {
+        return res.status(401).json({ success: false, message: error instanceof Error ? error.message : error });
     }
 }

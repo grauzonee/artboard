@@ -8,6 +8,7 @@ module.exports = {
         '^@helper/(.*)$': '<rootDir>/src/helper/$1',
         '^@routes/(.*)$': '<rootDir>/src/routes/$1',
         '^@utils/(.*)$': '<rootDir>/src/utils/$1',
+        '^@types/(.*)$': '<rootDir>/src/types/$1',
     },
     testPathIgnorePatterns: ['<rootDir>/dist/']
 };
