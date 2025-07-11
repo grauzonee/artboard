@@ -1,5 +1,6 @@
 import { Schema, model, Document, Model, Types } from "mongoose";
 import mongoose from "mongoose";
+import { getConfigValue } from "@helper/configHelper";
 
 export interface IPost extends Document<string> {
     title: string,
@@ -42,6 +43,7 @@ postSchema.set('toJSON', {
         ret.id = ret._id;
         delete ret._id;
         delete ret.__v;
+        ret.imageUrl = `${getConfigValue('HOST')}/${ret.imageUrl}`;
         return ret;
     }
 });

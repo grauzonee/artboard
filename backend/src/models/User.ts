@@ -1,5 +1,7 @@
 import { Schema, model, Document } from "mongoose";
 import bcrypt from 'bcrypt';
+import { getConfigValue } from "@helper/configHelper";
+import { checkImage } from "@controllers/mediaController";
 
 interface IUserMethods {
     matchPassword(enteredPassword: string): Promise<boolean>;
@@ -16,9 +18,10 @@ export interface IUser extends Document<string>, IUserMethods {
     country: string | null,
     city: string | null,
     birthdate: Date | null,
+    avatar: string | null
 }
 
-export type UpdateUserData = Partial<Pick<IUser, 'username' | 'name' | 'surname' | 'country' | 'city' | 'birthdate'>>
+export type UpdateUserData = Partial<Pick<IUser, 'username' | 'name' | 'surname' | 'country' | 'city' | 'birthdate' | 'avatar'>>
 
 const userSchema = new Schema<IUser>({
     username: {
@@ -61,6 +64,11 @@ const userSchema = new Schema<IUser>({
         required: false,
         default: null
     },
+    avatar: {
+        type: String,
+        required: false,
+        default: null
+    },
 }, { timestamps: true });
 
 userSchema.pre('save', async function(next) {
@@ -79,6 +87,7 @@ userSchema.set('toJSON', {
         delete ret._id;
         delete ret.__v;
         delete ret.password;
+        ret.avatar = `${getConfigValue('HOST')}/${ret.avatar}`;
         return ret;
     }
 });
@@ -88,6 +97,12 @@ userSchema.methods.matchPassword = async function(this: IUser, enteredPassword: 
 }
 
 userSchema.methods.updateProfile = async function(this: IUser, data: UpdateUserData): Promise<IUser> {
+    if (typeof (data.avatar) === 'string') {
+        if (!checkImage(data.avatar)) {
+            throw new Error("Invalid avatar, image doesn't exist")
+        }
+        this.avatar = data.avatar
+    }
     if (data.country !== undefined) this.country = data.country;
     if (data.city !== undefined) this.city = data.city;
     if (data.name !== undefined) this.name = data.name;

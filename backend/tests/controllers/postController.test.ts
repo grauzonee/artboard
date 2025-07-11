@@ -1,9 +1,9 @@
-import { createPost, getPosts, deletePost, updatePost } from '../../src/controllers/postController';
-jest.mock('../../src/models/Post');
-import { Post } from '../../src/models/Post';
+import { createPost, getPosts, deletePost, updatePost } from '@controllers/postController';
+jest.mock('@models/Post');
+import { Post } from '@models/Post';
 import { Request, Response } from 'express';
-jest.mock('../../src/controllers/mediaController');
-import { deleteImage } from '../../src/controllers/mediaController';
+jest.mock('@controllers/mediaController');
+import { deleteImage } from '@controllers/mediaController';
 
 const createdAt = Date();
 

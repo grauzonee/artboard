@@ -25,7 +25,7 @@ export async function createPost(req: Request, res: Response) {
     try {
         const author = req.user?._id;
         const post = await Post.create({ title, content, imageUrl, materials, author }).then(post => post.populate('author', 'username'));
-        res.status(201).json({ success: true, data: post });
+        res.status(201).json({ success: true, data: post.toJSON() });
     } catch (error) {
         if (error instanceof Error) {
             res.status(400).json({ success: false, message: error.message });
