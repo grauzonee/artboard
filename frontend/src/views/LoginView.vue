@@ -31,10 +31,15 @@ async function onFormSubmit() {
       router.push("/");
     }
   } catch (error) {
-    if (error.response?.data?.message) {
-      const formError = new FormError([error.response.data.message], []);
-      formRef.value?.setError(formError);
+    const errorData = error.response?.data;
+    if (!errorData || !errorData.data) {
+      return;
     }
+    const formError = new FormError(
+      [errorData.data.message],
+      errorData.data.fields,
+    );
+    formRef.value?.setError(formError);
   }
 }
 </script>

@@ -3,7 +3,8 @@ export function checkAllRequiredVars() {
         'NODE_ENV',
         'PORT',
         'DB_CONN_STRING',
-        'JWT_SECRET'
+        'JWT_SECRET',
+        'HOST'
     ];
     requiredVars.forEach((varName) => {
         getConfigValue(varName);

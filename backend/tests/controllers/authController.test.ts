@@ -62,7 +62,7 @@ describe("registerUser function", () => {
 
         expect(User.create).toHaveBeenCalledTimes(0);
         expect(res.status).toHaveBeenCalledWith(400);
-        expect(res.json).toHaveBeenCalledWith({ success: false, message: "Email already in use" });
+        expect(res.json).toHaveBeenCalledWith({ success: false, data: { message: "Email already in use", fields: ['email'] } });
     });
     test("should call User.create when registering", async () => {
         (User.create as jest.Mock).mockResolvedValue(resolvedUser);
@@ -94,7 +94,7 @@ describe("registerUser function", () => {
         expect(User.findOne).toHaveBeenCalledTimes(2);
         expect(User.create).toHaveBeenCalledTimes(1);
         expect(res.status).toHaveBeenCalledWith(400);
-        expect(res.json).toHaveBeenCalledWith({ success: false, message: "Invalid user data" });
+        expect(res.json).toHaveBeenCalledWith({ success: false, data: { message: "Invalid user data", fields: [] } });
     });
 
 });
@@ -151,13 +151,13 @@ describe("loginUser function", () => {
         await loginUser(req, res);
         expect(mockedUserObject.matchPassword).toHaveBeenCalledTimes(1);
         expect(res.status).toHaveBeenCalledWith(400);
-        expect(res.json).toHaveBeenCalledWith({ success: false, message: "Invalid password" });
+        expect(res.json).toHaveBeenCalledWith({ success: false, data: { message: "Invalid password", fields: ['password'] } });
     });
     test("should return 404 when email is incorrect", async () => {
         (User.findOne as jest.Mock).mockResolvedValue(null);
         await loginUser(req, res);
         expect(res.status).toHaveBeenCalledWith(400);
-        expect(res.json).toHaveBeenCalledWith({ success: false, message: "Invalid email" });
+        expect(res.json).toHaveBeenCalledWith({ success: false, data: { message: "Invalid email", fields: ['email'] } });
     });
 })
 // Get profile

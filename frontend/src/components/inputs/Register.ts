@@ -1,25 +1,10 @@
-export const inputs = {
-    username: {
-        name: "username",
-        label: "Username",
-        validation: {
-            minLength: {
-                value: 5,
-                message: "Username should be at least 5 characters length"
-            }
-        }
-    },
-    email: {
-        name: "email",
-        label: "Email",
-        validation: {
-            regex: {
-                value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                message: "Invalid email address"
-            }
-        }
+import { username } from "./Username"
+import { email } from "./Email"
 
-    },
+export const inputs = {
+    ...username,
+    ...email,
+
     password: {
         name: "password",
         label: "Password",
@@ -35,3 +20,6 @@ export const inputs = {
         }
     }
 }
+
+
+

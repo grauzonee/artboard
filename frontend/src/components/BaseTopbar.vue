@@ -25,7 +25,7 @@ function onLogout() {
         <router-link to="/posts">
           <font-awesome-icon
             class="mr-2"
-            icon="feed"
+            icon="pencil"
           />
         </router-link>
       </div>

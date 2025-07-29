@@ -1,9 +1,9 @@
 import { createPost, getPosts, deletePost, updatePost } from '../../src/controllers/postController';
-jest.mock('../../src/models/Post');
-import { Post } from '../../src/models/Post';
+jest.mock('@models/Post');
+import { Post } from '@models/Post';
 import { Request, Response } from 'express';
-jest.mock('../../src/controllers/mediaController');
-import { deleteImage } from '../../src/controllers/mediaController';
+jest.mock('@controllers/mediaController');
+import { deleteImage } from '@controllers/mediaController';
 
 const createdAt = Date();
 
@@ -98,6 +98,7 @@ describe("createPost function", () => {
                 materials: ["oil pastels"],
                 author: "author-id",
                 createdAt: createdAt,
+
                 populate: jest.fn().mockResolvedValue({
                     id: "someId",
                     title: "Trying out oil pastels",
@@ -109,6 +110,18 @@ describe("createPost function", () => {
                         username: "author-username",
                     },
                     createdAt: createdAt,
+                    toJSON: jest.fn().mockReturnValue({
+                        id: "someId",
+                        title: "Trying out oil pastels",
+                        content: "This image was drawn today...",
+                        imageUrl: "uploads/68600b2321b078541b943d5d//1751140112501-green-bologna.jpg",
+                        materials: ["oil pastels"],
+                        author: {
+                            id: "author-id",
+                            username: "author-username"
+                        },
+                        createdAt: createdAt
+                    }),
                 })
             }
         );
