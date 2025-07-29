@@ -42,16 +42,21 @@ async function onFormSubmit() {
 <template>
   <div class="login-page flex flex-col items-end">
     <div class="w-1/2 mt-10">
-      <BaseForm ref="formRef" :inputs="inputs" class="border border-white-1">
+      <BaseForm
+        ref="formRef"
+        :inputs="inputs"
+        class="border border-white-1"
+      >
         <BaseButton
           label="Sign up"
           bg-color="bg-primary-violet"
           @clicked="onFormSubmit"
         />
-        <span class="text-gray-400 text-sm w-full text-center mt-3"
-          >Already have an account?</span
+        <span class="text-gray-400 text-sm w-full text-center mt-3">Already have an account?</span>
+        <router-link
+          to="/login"
+          class="w-full block"
         >
-        <router-link to="/login" class="w-full block">
           <BaseButton
             label="Log in"
             bg-color="bg-lightGray"

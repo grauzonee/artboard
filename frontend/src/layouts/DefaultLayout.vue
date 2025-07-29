@@ -17,7 +17,10 @@ provide("setMainStyle", setMainStyle);
     <header class="header">
       <BaseTopbar />
     </header>
-    <main class="main px-24 py-5" :style="mainStyle">
+    <main
+      class="main px-24 py-5"
+      :style="mainStyle"
+    >
       <slot />
     </main>
     <BaseFooter />

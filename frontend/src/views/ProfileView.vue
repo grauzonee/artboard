@@ -82,28 +82,34 @@ provide("messageRef", messageRef);
 <template>
   <AvatarWidget
     ref="avatarWidgetRef"
-    @imageUpdated="onImageUpdated"
     :url="user ? user.avatar : null"
+    @image-updated="onImageUpdated"
   />
   <PasswordWidget ref="passwordWidgetRef" />
-  <div v-if="user" class="profile-page flex flex-row w-full">
+  <div
+    v-if="user"
+    class="profile-page flex flex-row w-full"
+  >
     <ContentPanel class="w-1/2 mx-3 p-5">
       <div class="flex flex-col justify-between gap-3">
         <div class="flex flex-col justify-between items-center mb-3">
           <UserAvatarField
             class="h-20 w-20"
-            @click="onAvatarClick"
             :url="user.avatar"
+            @click="onAvatarClick"
           />
         </div>
         <div class="user-info flex flex-col gap-3">
           <ContentPanel class="p-3">
-            <FormMessage ref="messageRef" type="error" />
+            <FormMessage
+              ref="messageRef"
+              type="error"
+            />
             <UserInfoField
               v-for="([fieldKey, item], index) in Object.entries(infoFields)"
               :key="index"
-              :name="fieldKey"
               ref="infoFieldsRef"
+              :name="fieldKey"
               :label="item.label"
               :value="item['value']"
               class="my-3"
@@ -123,8 +129,8 @@ provide("messageRef", messageRef);
     <ContentPanel class="w-1/2 mx-3 p-5">
       <div class="user-qualities flex flex-col gap-3">
         <UserInfoField
-          name="description"
           :ref="(el) => infoFieldsRef.push(el)"
+          name="description"
           label="Profile description"
           :value="user.description ?? 'Not set'"
           class="my-3"
@@ -134,10 +140,12 @@ provide("messageRef", messageRef);
         />
         <MaterialsField
           :materials="user.materials ?? []"
-          @updateMaterials="onUpdateMaterials"
+          @update-materials="onUpdateMaterials"
         />
       </div>
     </ContentPanel>
   </div>
-  <div v-else>Loading...</div>
+  <div v-else>
+    Loading...
+  </div>
 </template>

@@ -1,8 +1,7 @@
-import { api as axios, setToken, getBearerToken } from '@/lib/axios'
-import type { MediaRequest } from '@/types/requests/MediaRequest';
+import { api as axios, getBearerToken } from '@/lib/axios'
 
 export async function uploadImage(file: File) {
-    let formData = new FormData();
+    const formData = new FormData();
     formData.append("image", file);
     if (getBearerToken() === false) {
         return null;

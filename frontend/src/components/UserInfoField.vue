@@ -59,7 +59,10 @@ defineExpose({ turnEditOff, toggleEdit, isEdit });
     <span class="text-gray-600 font-poppins font-semibold mb-1 block">{{
       label
     }}</span>
-    <div v-if="!isEdit" class="flex flex-row justify-between items-center px-2">
+    <div
+      v-if="!isEdit"
+      class="flex flex-row justify-between items-center px-2"
+    >
       <span>{{ value }}</span>
       <font-awesome-icon
         icon="pencil"
@@ -67,15 +70,18 @@ defineExpose({ turnEditOff, toggleEdit, isEdit });
         @click="toggleEdit"
       />
     </div>
-    <div v-if="isEdit" class="flex flex-row justify-between items-center px-2">
+    <div
+      v-if="isEdit"
+      class="flex flex-row justify-between items-center px-2"
+    >
       <BaseInput
+        ref="inputRef"
+        v-model="inputValue"
         :placeholder="value"
         border-width="1px"
         class="h-7 w-2/3"
         :input-type="inputType"
-        v-model="inputValue"
         :validation="validation"
-        ref="inputRef"
       />
       <div class="w-1/6 flex flex-row justify-around items-center">
         <font-awesome-icon

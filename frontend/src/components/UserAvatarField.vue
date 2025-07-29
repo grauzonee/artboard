@@ -14,7 +14,7 @@ defineProps({
     <span
       class="rounded-full h-full w-full bg-gray-200 block border border-primary-violet overflow-hidden"
     >
-      <img :src="url ?? avatar" />
+      <img :src="url ?? avatar">
     </span>
   </div>
 </template>

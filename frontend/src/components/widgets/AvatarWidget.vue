@@ -4,11 +4,10 @@ import BaseButton from "@/components/BaseButton.vue";
 import { ref } from "vue";
 import avatar from "@/assets/images/avatar-placeholder.png";
 import { uploadImage } from "@/helpers/media.ts";
-import { updateUser } from "@/helpers/user.ts";
 const emit = defineEmits(["imageUpdated"]);
 const widgetRef = ref(null);
 const inputRef = ref(null);
-const props = defineProps({
+defineProps({
   url: {
     type: String,
     default: null,
@@ -34,14 +33,20 @@ defineExpose({
 <template>
   <BaseWidget ref="widgetRef">
     <div class="w-full aspect-square bg-gray-400 rounded mb-4 overflow-hidden">
-      <img class="w-full" :src="url ?? avatar" />
+      <img
+        class="w-full"
+        :src="url ?? avatar"
+      >
     </div>
     <input
+      ref="inputRef"
       type="file"
       class="hidden"
-      ref="inputRef"
       @change="handleFileChange"
+    >
+    <BaseButton
+      label="Change"
+      @click="triggerInput"
     />
-    <BaseButton label="Change" @click="triggerInput" />
   </BaseWidget>
 </template>

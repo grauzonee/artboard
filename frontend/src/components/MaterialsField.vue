@@ -44,16 +44,22 @@ function deleteMaterial(material) {
 </script>
 <template>
   <div class="flex flex-col">
-    <label class="flex flex-row items-center justify-between"
-      >Materials:
+    <label class="flex flex-row items-center justify-between">Materials:
       <font-awesome-icon
         icon="plus"
         class="h-2 text-bold pointer text-gray-500 bg-primary-orange text-white rounded-full p-1"
         @click="toggleAdd"
       />
     </label>
-    <div class="flex flex-row w-100" v-if="isAdd">
-      <BaseInput v-model="newMaterial" border-width="1px" class="my-2" />
+    <div
+      v-if="isAdd"
+      class="flex flex-row w-100"
+    >
+      <BaseInput
+        v-model="newMaterial"
+        border-width="1px"
+        class="my-2"
+      />
 
       <div
         class="w-1/6 flex flex-row justify-around items-center content-center"
@@ -73,18 +79,20 @@ function deleteMaterial(material) {
     <div class="w-full flex flex-row flex-wrap gap-1 mt-2">
       <span
         v-for="(material, index) in materials"
-        class="block rounded shaded-sm px-5 py-2 bg-primary-violet text-white font-bold relative"
         :key="index"
+        class="block rounded shaded-sm px-5 py-2 bg-primary-violet text-white font-bold relative"
       >
         <span
           class="absolute top-0 right-0 h-3 w-3 bg-red-600 rounded-full border border-gray-500 flex items-center justify-center text-xs cursor-pointer"
           @click="deleteMaterial(material)"
         >
-          <font-awesome-icon icon="xmark" class="h-2 cursor-pointer" />
+          <font-awesome-icon
+            icon="xmark"
+            class="h-2 cursor-pointer"
+          />
         </span>
 
-        {{ material }}</span
-      >
+        {{ material }}</span>
     </div>
   </div>
 </template>
