@@ -2,7 +2,6 @@ import { getProfile, updatePassword, updateUser } from '@controllers/userControl
 import { getUserByToken } from '@helper/auth/utils';
 import { IUser, User } from '@models/User';
 import { Request, Response } from 'express';
-import { AuthRequest } from '@controllers/authController';
 import { checkImage } from '@controllers/mediaController';
 jest.mock('@controllers/mediaController');
 
@@ -50,7 +49,7 @@ describe("getProfile function", () => {
     test("should return profile when user was found", async () => {
         (getUserByToken as jest.Mock).mockReturnValue(resolvedUser);
 
-        let req: AuthRequest = {
+        let req: Request = {
             headers: {
                 authorization: "Bearer 24r32"
             }
@@ -81,7 +80,7 @@ describe("getProfile function", () => {
 
 describe("updateProfile function", () => {
     test("should return 401 on empty body", async () => {
-        let req: AuthRequest = {
+        let req: Request = {
             headers: {
                 authorization: "Bearer 123"
             },
@@ -105,7 +104,7 @@ describe("updateProfile function", () => {
         });
         (getUserByToken as jest.Mock).mockReturnValue(mockUser);
         mockUser.save = jest.fn().mockResolvedValue(mockUser);
-        let req: AuthRequest = {
+        let req: Request = {
             headers: {
                 authorization: "Bearer 123"
             },
@@ -129,7 +128,7 @@ describe("updateProfile function", () => {
             password: 'hashed',
         });
         (getUserByToken as jest.Mock).mockReturnValue(mockUser);
-        let req: AuthRequest = {
+        let req: Request = {
             headers: {
                 authorization: "Bearer 123"
             },
@@ -155,7 +154,7 @@ describe("updateProfile function", () => {
         mockUser.save = jest.fn().mockResolvedValue(mockUser);
         (checkImage as jest.Mock).mockReturnValue(true);
 
-        let req: AuthRequest = {
+        let req: Request = {
             headers: {
                 authorization: "Bearer 123"
             },
@@ -184,7 +183,7 @@ describe("updatePassword function", () => {
             password: 'hashed',
         });
         (getUserByToken as jest.Mock).mockReturnValue(mockUser);
-        let req: AuthRequest = {
+        let req: Request = {
             headers: {
                 authorization: "Bearer 123"
             },
@@ -208,7 +207,7 @@ describe("updatePassword function", () => {
         });
         (getUserByToken as jest.Mock).mockReturnValue(mockUser);
         mockUser.matchPassword = jest.fn().mockResolvedValue(false);
-        let req: AuthRequest = {
+        let req: Request = {
             headers: {
                 authorization: "Bearer 123"
             },
@@ -234,7 +233,7 @@ describe("updatePassword function", () => {
         (getUserByToken as jest.Mock).mockReturnValue(mockUser);
         mockUser.matchPassword = jest.fn().mockResolvedValue(true);
         mockUser.save = jest.fn().mockResolvedValue(mockUser);
-        let req: AuthRequest = {
+        let req: Request = {
             headers: {
                 authorization: "Bearer 123"
             },

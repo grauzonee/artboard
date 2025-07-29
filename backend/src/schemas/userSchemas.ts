@@ -8,7 +8,9 @@ export const UpdateProfileSchema: Joi.Schema = Joi.object({
     city: Joi.string(),
     country: Joi.string(),
     birthdate: Joi.date(),
-    avatar: Joi.string()
+    avatar: Joi.string(),
+    description: Joi.string(),
+    materials: Joi.array()
 }).min(1);
 
 

@@ -99,7 +99,7 @@ onMounted(() => {
       :style="labelStyles"
       >{{ label }}</label
     >
-    <transition name="input">
+    <transition name="input" v-if="inputType !== 'textarea'">
       <input
         v-if="showInput"
         v-model="modelValue"
@@ -109,6 +109,17 @@ onMounted(() => {
         :style="inputStyles"
         @input="onInput"
       />
+    </transition>
+    <transition name="textarea" v-if="inputType == 'textarea'">
+      <textarea
+        v-if="showInput && inputType == 'textarea'"
+        v-model="modelValue"
+        :class="['outline-none w-full h-full rounded-md px-5', bgColor]"
+        :type="inputType"
+        :placeholder="placeholder"
+        :style="inputStyles"
+        @input="onInput"
+      ></textarea>
     </transition>
   </div>
 </template>

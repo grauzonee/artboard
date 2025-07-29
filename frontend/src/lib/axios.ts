@@ -21,6 +21,7 @@ api.interceptors.response.use(
     error => {
         console.log(error);
         if (error.response && error.response.status === 401) {
+            console.log('call cleanToken')
             cleanToken();
         }
         console.error('API error:', error);

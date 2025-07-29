@@ -13,14 +13,11 @@ provide("setMainStyle", setMainStyle);
 </script>
 
 <template>
-  <div class="layout grid grid-rows-[auto_1fr_auto] h-screen w-full">
+  <div class="layout grid grid-rows-[auto_1fr_auto] w-full">
     <header class="header">
       <BaseTopbar />
     </header>
-    <main
-      class="main px-12 py-5"
-      :style="mainStyle"
-    >
+    <main class="main px-24 py-5" :style="mainStyle">
       <slot />
     </main>
     <BaseFooter />
@@ -34,7 +31,8 @@ provide("setMainStyle", setMainStyle);
     "header"
     "main"
     "footer";
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
 }
 
 .header {

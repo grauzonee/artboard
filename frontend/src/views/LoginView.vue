@@ -31,30 +31,27 @@ async function onFormSubmit() {
       router.push("/");
     }
   } catch (error) {
-    if (error.response?.data?.message) {
-      const formError = new FormError([error.response.data.message], []);
-      formRef.value?.setError(formError);
+    const errorData = error.response?.data;
+    if (!errorData || !errorData.data) {
+      return;
     }
+    const formError = new FormError(
+      [errorData.data.message],
+      errorData.data.fields,
+    );
+    formRef.value?.setError(formError);
   }
 }
 </script>
 <template>
   <div class="login-page flex flex-col items-end">
     <div class="w-1/2 mt-10">
-      <BaseForm
-        ref="formRef"
-        :inputs="inputs"
-        class="border border-white-1"
-      >
-        <BaseButton
-          label="Log in"
-          @clicked="onFormSubmit"
-        />
-        <span class="text-gray-400 text-sm w-full text-center font-poppins mt-3">Don't have an account yet?</span>
-        <router-link
-          to="/signup"
-          class="w-full block"
+      <BaseForm ref="formRef" :inputs="inputs" class="border border-white-1">
+        <BaseButton label="Log in" @clicked="onFormSubmit" />
+        <span class="text-gray-400 text-sm w-full text-center font-poppins mt-3"
+          >Don't have an account yet?</span
         >
+        <router-link to="/signup" class="w-full block">
           <BaseButton
             label="Sign up"
             bg-color="bg-lightGray"

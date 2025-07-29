@@ -19,10 +19,12 @@ export interface IUser extends Document<string>, IUserMethods {
     country: string | null,
     city: string | null,
     birthdate: Date | null,
-    avatar: string | null
+    avatar: string | null,
+    description: string | null,
+    materials: string[] | null
 }
 
-export type UpdateUserData = Partial<Pick<IUser, 'username' | 'name' | 'surname' | 'country' | 'city' | 'birthdate' | 'avatar'>>
+export type UpdateUserData = Partial<Pick<IUser, 'username' | 'name' | 'surname' | 'country' | 'city' | 'birthdate' | 'avatar' | 'description' | 'materials'>>
 export interface UpdatePasswordData {
     oldPassword: string,
     newPassword: string
@@ -74,6 +76,16 @@ const userSchema = new Schema<IUser>({
         required: false,
         default: null
     },
+    description: {
+        type: String,
+        required: false,
+        default: null
+    },
+    materials: {
+        type: Array<string>,
+        required: false,
+        default: []
+    }
 }, { timestamps: true });
 
 userSchema.pre('save', async function(next) {
@@ -92,7 +104,8 @@ userSchema.set('toJSON', {
         delete ret._id;
         delete ret.__v;
         delete ret.password;
-        ret.avatar = `${getConfigValue('HOST')}/${ret.avatar}`;
+        ret.avatar = ret.avatar === null ? null : `${getConfigValue('HOST')}/${ret.avatar}`;
+        ret.birthdate = new Date(ret.birthdate).toISOString().slice(0, 10)
         return ret;
     }
 });
@@ -111,9 +124,11 @@ userSchema.methods.updateProfile = async function(this: IUser, data: UpdateUserD
     if (data.country !== undefined) this.country = data.country;
     if (data.city !== undefined) this.city = data.city;
     if (data.name !== undefined) this.name = data.name;
-    if (data.surname !== undefined) this.surname = data.surname;
+    if (data.username !== undefined) this.username = data.username;
     if (data.surname !== undefined) this.surname = data.surname;
     if (data.birthdate !== undefined) this.birthdate = data.birthdate;
+    if (data.description !== undefined) this.description = data.description;
+    if (data.materials !== undefined) this.materials = data.materials;
 
     await this.save();
     return this;

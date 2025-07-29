@@ -19,7 +19,7 @@ const mongoString: string = getConfigValue('DB_CONN_STRING');
 app.use(cors());
 app.use(express.json());
 app.use('/api/auth', authRouter);
-app.use('/api/profile', userRouter);
+app.use('/api/user', userRouter);
 app.use('/api/posts', postsRouter);
 app.use('/api/media', mediaRouter);
 app.use('/api/comments', commentRouter);

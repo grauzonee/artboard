@@ -1,4 +1,4 @@
-export class SignUpRequest {
+export type SignUpRequest = {
     username: string;
     email: string;
     password: string;
