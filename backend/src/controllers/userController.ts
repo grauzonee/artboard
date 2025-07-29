@@ -3,15 +3,16 @@ import { IUser, User } from "@models/User"
 import { getUserByToken } from '@helper/auth/utils';
 
 export async function updateUser(req: Request, res: Response) {
+    const requestData = req.body;
+    if (!requestData) {
+        return res.status(401).json({ success: false, message: "Empty body is not allowed" });
+    }
     try {
         await validateUpdateData(req);
     } catch (error) {
         return res.status(400).json({ success: false, message: error instanceof Error ? error.message : error });
     }
-    const requestData = req.body;
-    if (requestData === undefined) {
-        return res.status(401).json({ success: false, message: "Empty body is not allowed" });
-    }
+
     try {
         const user = await req.user?.updateProfile(requestData);
         return res.status(200).json({ success: true, data: user ? user.toJSON() : null });
