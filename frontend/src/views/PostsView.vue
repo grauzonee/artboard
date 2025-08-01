@@ -19,20 +19,27 @@ function onAddPostClick() {
 <template>
   <NewPostWidget ref="newPostWidget" />
   <div class="posts-page h-full">
-    <div class="flex gap-5 h-[calc(100%-1rem)]">
-      <MqResponsive target="mdPlus">
-        <div class="w-1/6 h-full p-4 bg-gray-100 text-black">
-          Filters
-        </div>
-      </MqResponsive>
-      <div class="w-2/3 h-full overflow-auto flex flex-col gap-5 no-scrollbar">
+    <div
+      class="flex flex-col lg:flex-row lg:flex-row gap-5 h-[calc(100%-1rem)]"
+    >
+      <div class="w-full lg:w-1/5 p-4 bg-gray-100 text-black">
+        Filters
+      </div>
+      <div
+        class="flex-1 h-full overflow-auto flex flex-col gap-5 no-scrollbar order-2 lg:order-none"
+      >
         <SinglePost />
         <SinglePost />
       </div>
-      <MyPosts
-        class="w-1/4"
-        @add-post-click="onAddPostClick"
-      />
+      <MqResponsive
+        target="lg+"
+        class="w-1/2 lg:w-1/4 order-1 lg:order-none"
+      >
+        <MyPosts
+          class="w-full"
+          @add-post-click="onAddPostClick"
+        />
+      </MqResponsive>
     </div>
   </div>
 </template>

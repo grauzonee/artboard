@@ -22,16 +22,7 @@ library.add(faHeart)
 const app = createApp(App)
 
 app.use(router)
-app.use(Vue3Mq, {
-    breakpoints: { // default breakpoints - customise this
-        xs: 576,
-        sm: 768,
-        md: 992,
-        lg: 1200,
-        xl: 1400,
-        xxl: Infinity
-    }
-})
+app.use(Vue3Mq, { global: true })
 app.component('FontAwesomeIcon', FontAwesomeIcon)
 
 app.mount('#app')
