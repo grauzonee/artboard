@@ -1,5 +1,5 @@
 import './assets/main.css'
-
+import { Vue3Mq } from "vue3-mq";
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
@@ -22,6 +22,16 @@ library.add(faHeart)
 const app = createApp(App)
 
 app.use(router)
+app.use(Vue3Mq, {
+    breakpoints: { // default breakpoints - customise this
+        xs: 576,
+        sm: 768,
+        md: 992,
+        lg: 1200,
+        xl: 1400,
+        xxl: Infinity
+    }
+})
 app.component('FontAwesomeIcon', FontAwesomeIcon)
 
 app.mount('#app')

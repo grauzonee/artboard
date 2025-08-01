@@ -13,12 +13,9 @@ defineExpose({
 });
 
 function onFormSubmit() {
-  console.log(formRef.value.validate());
   if (formRef.value?.validate() === false) {
     return;
   }
-  const formData = formRef.value?.formData;
-  console.log(formData);
 }
 </script>
 

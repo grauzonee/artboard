@@ -15,8 +15,8 @@ defineExpose({ toggleWidget });
     v-if="show"
     class="absolute top-0 left-0 right-0 bottom-0 bg-gray-700/60 flex justify-center py-10"
   >
-    <ContentPanel class="w-1/2 p-3">
-      <div class="w-fill text-right pointer">
+    <ContentPanel class="md:w-1/2 w-5/6 p-3 z-100 overflow-scroll no-scrollbar">
+      <div class="w-fill text-right cursor-pointer">
         <font-awesome-icon
           icon="xmark"
           class="h-5 text-gray-500"
