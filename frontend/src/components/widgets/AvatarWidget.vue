@@ -1,30 +1,38 @@
 <script setup lang="ts">
 import BaseWidget from "@/components/BaseWidget.vue";
-import BaseButton from "@/components/BaseButton.vue";
 import { ref } from "vue";
 import avatar from "@/assets/images/avatar-placeholder.png";
-import { uploadImage } from "@/helpers/media.ts";
+import BaseForm from "@/components/BaseForm.vue";
+
 const emit = defineEmits(["imageUpdated"]);
 const widgetRef = ref(null);
-const inputRef = ref(null);
+const formRef = ref(null);
+const inputs = {
+  avatar: {
+    name: "avatar",
+    type: "file",
+    label: "Change",
+  },
+};
+
+async function onImageSelected(name) {
+  if (name === "avatar") {
+    const urls = await formRef.value.getFiles();
+    console.log(urls);
+    if (!urls[0]) {
+      formRef.value.setError(["We could not upload the image :("]);
+      return;
+    }
+    emit("imageUpdated", urls[0]);
+  }
+}
 defineProps({
   url: {
     type: String,
     default: null,
   },
 });
-function triggerInput() {
-  inputRef.value.click();
-}
-async function handleFileChange(event) {
-  try {
-    const responseData = await uploadImage(event.target.files[0]);
-    console.log(responseData);
-    emit("imageUpdated", responseData.path);
-  } catch (error) {
-    console.log(error);
-  }
-}
+
 defineExpose({
   widgetRef,
 });
@@ -32,21 +40,18 @@ defineExpose({
 
 <template>
   <BaseWidget ref="widgetRef">
-    <div class="w-full aspect-square bg-gray-400 rounded mb-4 overflow-hidden">
+    <div
+      class="h-2/3 max-w-full mx-auto aspect-square bg-gray-400 rounded mb-4 overflow-hidden"
+    >
       <img
-        class="w-full"
+        class="object-cover object-center h-auto max-w-full rounded-sm"
         :src="url ?? avatar"
       >
     </div>
-    <input
-      ref="inputRef"
-      type="file"
-      class="hidden"
-      @change="handleFileChange"
-    >
-    <BaseButton
-      label="Change"
-      @click="triggerInput"
+    <BaseForm
+      ref="formRef"
+      :inputs="inputs"
+      @image-selected="onImageSelected"
     />
   </BaseWidget>
 </template>

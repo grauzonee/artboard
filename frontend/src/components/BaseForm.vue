@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import BaseInput from "@/components/BaseInput.vue";
+import SelectFileInput from "@/components/SelectFileInput.vue";
+import FileDragAndDrop from "@/components/FileDragAndDrop.vue";
 import FormMessage from "@/components/FormMessage.vue";
-import { ref, defineProps, nextTick, reactive, watch } from "vue";
+import { ref, defineProps, nextTick, reactive, watch, provide } from "vue";
 import { FormError } from "@/types/FormError.ts";
 import { FormInput } from "@/types/FormInput.ts";
 
 // Ref for FormMessage component
 const messageRef = ref(null);
-const inputRefs = ref(null);
+const inputRefs = ref([]);
 const formData = reactive({});
 
 const props = defineProps<{
@@ -15,7 +17,13 @@ const props = defineProps<{
     type: FormInput[];
     required: true;
   };
+  inputsClasses: {
+    type: string;
+    default: "h-24";
+  };
 }>();
+
+const emit = defineEmits(["imageSelected"]);
 
 const formInputs = ref<InputInstance[]>(props.inputs);
 
@@ -64,6 +72,25 @@ function validate() {
   return true;
 }
 
+async function getFiles() {
+  try {
+    let fileUploadPromises = inputRefs.value
+      .filter((ref) => ref?.uploadFile)
+      .map((ref) => ref.uploadFile());
+
+    const urls = await Promise.all(fileUploadPromises);
+    return urls.filter((url) => url);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+function onImageSelected(name) {
+  emit("imageSelected", name);
+}
+
+provide(["setError"]);
+
 watch(
   () => formData.email,
   () => {
@@ -90,6 +117,7 @@ defineExpose({
   setError,
   formData,
   validate,
+  getFiles,
 });
 </script>
 <template>
@@ -100,15 +128,32 @@ defineExpose({
       ref="messageRef"
       type="error"
     />
-    <BaseInput
+    <template
       v-for="[key, item] in Object.entries(formInputs)"
       :key="key"
-      ref="inputRefs"
-      v-model="formData[key]"
-      :label="item.label"
-      class="h-24"
-      :validation="item.validation"
-    />
+    >
+      <SelectFileInput
+        v-if="item.type === 'file'"
+        :ref="(el) => inputRefs.push(el)"
+        :label="item.label"
+        :name="item.name"
+        @image-selected="onImageSelected(item.name)"
+      />
+      <FileDragAndDrop
+        v-else-if="item.type === 'drop'"
+        :ref="(el) => inputRefs.push(el)"
+      />
+      <BaseInput
+        v-else
+        :ref="(el) => inputRefs.push(el)"
+        v-model="formData[key]"
+        :label="item.label"
+        :input-type="item.type ?? 'text'"
+        :class="inputsClasses"
+        :validation="item.validation"
+      />
+    </template>
+
     <slot />
   </div>
 </template>

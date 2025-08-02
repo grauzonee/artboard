@@ -49,6 +49,7 @@ async function onFormSubmit() {
       <BaseForm
         ref="formRef"
         :inputs="inputs"
+        inputs-classes="h-24"
         class="border border-white-1"
       >
         <BaseButton

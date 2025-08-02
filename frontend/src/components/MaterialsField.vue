@@ -44,10 +44,10 @@ function deleteMaterial(material) {
 </script>
 <template>
   <div class="flex flex-col">
-    <label class="flex flex-row items-center justify-between">Materials:
+    <label class="flex flex-row items-center justify-between h-8">Materials:
       <font-awesome-icon
         icon="plus"
-        class="h-2 text-bold pointer text-gray-500 bg-primary-orange text-white rounded-full p-1"
+        class="md:h-2 text-bold cursor-pointer text-gray-500 bg-primary-orange text-white md:rounded-full p-1 h-6 w-12"
         @click="toggleAdd"
       />
     </label>
@@ -83,7 +83,7 @@ function deleteMaterial(material) {
         class="block rounded shaded-sm px-5 py-2 bg-primary-violet text-white font-bold relative"
       >
         <span
-          class="absolute top-0 right-0 h-3 w-3 bg-red-600 rounded-full border border-gray-500 flex items-center justify-center text-xs cursor-pointer"
+          class="absolute top-0 right-0 h-3 w-3 bg-red-600 rounded-full border border-gray-500 flex items-center justify-center text-xs cursor-pointer z-20"
           @click="deleteMaterial(material)"
         >
           <font-awesome-icon
