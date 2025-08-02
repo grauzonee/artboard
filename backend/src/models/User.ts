@@ -104,8 +104,8 @@ userSchema.set('toJSON', {
         delete ret._id;
         delete ret.__v;
         delete ret.password;
-        ret.avatar = ret.avatar === null ? null : `${getConfigValue('HOST')}/${ret.avatar}`;
-        ret.birthdate = new Date(ret.birthdate).toISOString().slice(0, 10)
+        ret.avatar = ret.avatar ? `${getConfigValue('HOST')}/${ret.avatar}` : null;
+        ret.birthdate = ret.birthdate ? new Date(ret.birthdate).toISOString().slice(0, 10) : null;
         return ret;
     }
 });

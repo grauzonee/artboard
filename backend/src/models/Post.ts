@@ -44,6 +44,7 @@ postSchema.set('toJSON', {
         delete ret._id;
         delete ret.__v;
         ret.imageUrl = `${getConfigValue('HOST')}/${ret.imageUrl}`;
+        ret.createdAt = ret.createdAt ? new Date(ret.createdAt).toLocaleDateString().slice(0, 10) : null;
         return ret;
     }
 });
