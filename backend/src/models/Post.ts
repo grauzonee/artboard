@@ -1,6 +1,8 @@
 import { Schema, model, Document, Model, Types } from "mongoose";
 import mongoose from "mongoose";
 import { getConfigValue } from "@helper/configHelper";
+import { mongoosePagination } from "../plugins/paginate";
+import { Paginable } from "types/pagination";
 
 export interface IPost extends Document<string> {
     title: string,
@@ -12,8 +14,8 @@ export interface IPost extends Document<string> {
     updatedAt?: Date
 }
 
-export interface IPostModel extends Model<IPost> {
-    getSortableFields(): string[];
+export interface IPostModel extends Model<IPost>, Paginable<IPost> {
+    getSortableFields: () => string[];
 }
 
 const postSchema = new Schema<IPost>({
@@ -38,12 +40,14 @@ const postSchema = new Schema<IPost>({
     }],
 }, { timestamps: true });
 
+postSchema.plugin(mongoosePagination);
 postSchema.set('toJSON', {
     transform: function(doc, ret) {
         ret.id = ret._id;
         delete ret._id;
         delete ret.__v;
         ret.imageUrl = `${getConfigValue('HOST')}/${ret.imageUrl}`;
+        ret.createdAt = ret.createdAt ? new Date(ret.createdAt).toLocaleDateString().slice(0, 10) : null;
         return ret;
     }
 });
