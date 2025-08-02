@@ -2,17 +2,13 @@
 import { ref } from "vue";
 import BaseWidget from "@/components/BaseWidget.vue";
 import BaseButton from "@/components/BaseButton.vue";
-import MaterialsField from "@/components/MaterialsField.vue";
-import BaseForm from "@/components/BaseForm.vue";
+import MaterialsForm from "@/components/MaterialsForm.vue";
 import { inputs } from "@/components/inputs/NewPost.ts";
 
 const widgetRef = ref(null);
-const materialsRef = ref([]);
+
 function addPost() {}
 
-function onUpdateMaterials(newMaterials) {
-  materialsRef.value = newMaterials;
-}
 defineExpose({
   widgetRef,
 });
@@ -23,14 +19,9 @@ defineExpose({
       <p class="h3 color-gray-700 font-bold mb-3">
         New post
       </p>
-      <BaseForm
+      <MaterialsForm
         :inputs="inputs"
-        inputs-classes="h-20 border-primary-violet"
-      />
-      <MaterialsField
-        class="mb-3"
-        :materials="materialsRef ?? []"
-        @update-materials="onUpdateMaterials"
+        inputs-classes="h-20"
       />
       <BaseButton
         label="Add"

@@ -17,12 +17,6 @@ onMounted(() => {
 function onAddPostClick() {
   newPostWidget.value.widgetRef.toggleWidget();
 }
-
-function handlePostsScroll() {
-  if (filtersRef.value.showFilters === true) {
-    filtersRef.value.toggleShowFilters();
-  }
-}
 </script>
 <template>
   <NewPostWidget ref="newPostWidget" />
@@ -36,7 +30,6 @@ function handlePostsScroll() {
       />
       <div
         class="flex-1 h-full overflow-scroll flex flex-col gap-5 no-scrollbar order-2 lg:order-none"
-        @scroll="handlePostsScroll"
       >
         <SinglePost />
         <SinglePost />
@@ -45,10 +38,7 @@ function handlePostsScroll() {
         target="lg+"
         class="w-1/2 lg:w-1/4 order-1 lg:order-none"
       >
-        <MyPosts
-          class="w-full"
-          @add-post-click="onAddPostClick"
-        />
+        <MyPosts @add-post-click="onAddPostClick" />
       </MqResponsive>
     </div>
   </div>
