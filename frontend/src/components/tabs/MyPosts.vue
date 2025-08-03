@@ -52,6 +52,11 @@ async function fetchMyPosts() {
         </div>
       </div>
     </div>
-    <span class="text-xs font-bold w-full text-center block mt-3 cursor-pointer">See all</span>
+    <router-link
+      :to="{ name: 'posts', params: { id: 'mine' } }"
+      class="w-full block"
+    >
+      <span class="text-xs font-bold text-center block mt-3 cursor-pointer">See all</span>
+    </router-link>
   </ContentPanel>
 </template>

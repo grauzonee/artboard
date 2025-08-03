@@ -109,7 +109,7 @@ watch(
   () => {
     Object.values(formInputs.value).forEach((item, index) => {
       if (item.name === "email") {
-        inputRefs.value[index].setDefaultColor();
+        Object.values(inputRefs)[index].setDefaultColor();
       }
     });
   },
@@ -120,7 +120,7 @@ watch(
   () => {
     Object.values(formInputs.value).forEach((item, index) => {
       if (item.name === "password") {
-        inputRefs.value[index].setDefaultColor();
+        Object.values(inputRefs)[index].setDefaultColor();
       }
     });
   },
