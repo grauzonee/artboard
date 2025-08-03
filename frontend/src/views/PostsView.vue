@@ -40,9 +40,19 @@ async function onLoadMore() {
   page.value++;
   await fetchPosts();
 }
+
+async function onPostAdded() {
+  page.value = 1;
+  posts.value = [];
+  newPostWidget.value.widgetRef.toggleWidget();
+  await fetchPosts();
+}
 </script>
 <template>
-  <NewPostWidget ref="newPostWidget" />
+  <NewPostWidget
+    ref="newPostWidget"
+    @post-added="onPostAdded"
+  />
   <div class="posts-page h-full">
     <div
       class="flex flex-col lg:flex-row lg:flex-row gap-6 h-[calc(100%-0.8rem)]"
@@ -52,7 +62,7 @@ async function onLoadMore() {
         class="w-full lg:w-1/5 p-4 bg-gray-100 text-lx"
       />
       <ScrollableList
-        v-if="posts"
+        v-if="posts.length > 0"
         ref="postListRef"
         @load-more="onLoadMore"
       >

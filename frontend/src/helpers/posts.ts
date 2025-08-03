@@ -18,7 +18,7 @@ export async function getPosts(page: number, author: string | null, sortByDesc: 
     return null;
 }
 export async function addPost(formData: CreatePostRequest) {
-    const response = await axios.post('/posts', formData);
+    const response = await axios.post('/posts/create', formData);
     const responseData = response.data;
     if (response.status === 200) {
         return responseData;

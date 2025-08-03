@@ -48,7 +48,7 @@ function onToggleEdit() {
 }
 
 async function onImageUpdated(url) {
-  onFieldSubmit("avatar", url);
+  onFieldSubmit(url.name, url.url);
 }
 async function onUpdateMaterials(newMaterials) {
   onFieldSubmit("materials", newMaterials);

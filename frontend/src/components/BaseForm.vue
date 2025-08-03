@@ -9,7 +9,7 @@ import { FormInput } from "@/types/FormInput.ts";
 
 // Ref for FormMessage component
 const messageRef = ref(null);
-const inputRefs = ref([]);
+const inputRefs = reactive<Record<string, object>>({});
 const formData = reactive({});
 
 const props = defineProps<{
@@ -38,12 +38,15 @@ function setError(formError: FormError) {
   }
   setTimeout(() => {
     messageRef.value?.setMessages([]);
+    Object.values(inputRefs).map((ref) => {
+      ref.setDefaultColor();
+    });
   }, 3000);
 }
 
 function highlightInput(index: number, color: string | null) {
   nextTick(() => {
-    const inputContent = inputRefs.value[index];
+    const inputContent = Object.values(inputRefs)[index];
     if (inputContent?.changeBorderColor && inputContent?.changeLabelColor) {
       inputContent.changeBorderColor(color);
       inputContent.changeLabelColor(color);
@@ -56,14 +59,17 @@ function highlightInput(index: number, color: string | null) {
 function validate() {
   const validationErrors = [];
   const invalidFields = [];
-  const inputNames = Object.keys(formInputs.value);
-  inputRefs.value.forEach((item, index) => {
+  const inputNames = Object.keys(inputRefs);
+  console.log("inputNames", inputNames);
+  Object.values(inputRefs).forEach((item, index) => {
+    console.log("item", item);
     const validationError = item.validate();
     if (validationError !== true) {
       validationErrors.push(validationError);
       invalidFields.push(inputNames[index]);
     }
   });
+  console.log("invalidFields", invalidFields);
   if (validationErrors.length > 0) {
     const error = new FormError(validationErrors, invalidFields);
     setError(error);
@@ -73,15 +79,22 @@ function validate() {
 }
 
 async function getFiles() {
-  try {
-    let fileUploadPromises = inputRefs.value
-      .filter((ref) => ref?.uploadFile)
-      .map((ref) => ref.uploadFile());
+  const uploadRefs = Object.values(inputRefs).filter(
+    (ref) => ref && typeof ref.uploadFile === "function",
+  );
 
-    const urls = await Promise.all(fileUploadPromises);
-    return urls.filter((url) => url);
+  try {
+    const uploadPromises = uploadRefs.map((ref) =>
+      ref.uploadFile().catch((e) => {
+        console.error(`Upload failed for ${ref.name || "file"}:`, e);
+        return null; // Return null for failed uploads
+      }),
+    );
+    const results = await Promise.all(uploadPromises);
+    return results.filter(Boolean); // Remove null values
   } catch (error) {
-    console.log(error);
+    console.error("Batch upload failed:", error);
+    return [];
   }
 }
 
@@ -89,7 +102,7 @@ function onImageSelected(name) {
   emit("imageSelected", name);
 }
 
-provide(["setError"]);
+provide("setError", setError);
 
 watch(
   () => formData.email,
@@ -134,18 +147,31 @@ defineExpose({
     >
       <SelectFileInput
         v-if="item.type === 'file'"
-        :ref="(el) => inputRefs.push(el)"
+        :ref="
+          (el) => {
+            if (el) inputRefs[item.name] = el;
+          }
+        "
         :label="item.label"
         :name="item.name"
         @image-selected="onImageSelected(item.name)"
       />
       <FileDragAndDrop
         v-else-if="item.type === 'drop'"
-        :ref="(el) => inputRefs.push(el)"
+        :ref="
+          (el) => {
+            if (el) inputRefs[item.name] = el;
+          }
+        "
+        :name="item.name"
       />
       <BaseInput
         v-else
-        :ref="(el) => inputRefs.push(el)"
+        :ref="
+          (el) => {
+            if (el) inputRefs[item.name] = el;
+          }
+        "
         v-model="formData[key]"
         :label="item.label"
         :input-type="item.type ?? 'text'"
