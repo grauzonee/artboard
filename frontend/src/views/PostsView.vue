@@ -9,9 +9,11 @@ import { getPosts } from "@/helpers/posts.ts";
 
 const setMainStyle = inject("setMainStyle");
 const newPostWidget = ref(null);
+const postWidget = ref(null);
 const filtersRef = ref(null);
 const postListRef = ref(null);
 const posts = ref([]);
+const activePost = ref(null);
 const page = ref(1);
 onMounted(async () => {
   await fetchPosts();
@@ -21,7 +23,7 @@ onMounted(async () => {
 });
 
 function onAddPostClick() {
-  newPostWidget.value.widgetRef.toggleWidget();
+  newPostWidget.value?.toggleWidget();
 }
 
 async function fetchPosts() {
@@ -44,14 +46,23 @@ async function onLoadMore() {
 async function onPostAdded() {
   page.value = 1;
   posts.value = [];
-  newPostWidget.value.widgetRef.toggleWidget();
+  newPostWidget.value?.toggleWidget();
   await fetchPosts();
+}
+
+function selectPost(post) {
+  activePost.value = post;
+  postWidget.value?.toggleWidget();
 }
 </script>
 <template>
   <NewPostWidget
     ref="newPostWidget"
     @post-added="onPostAdded"
+  />
+  <postWidget
+    ref="postWidget"
+    :post="activePost"
   />
   <div class="posts-page h-full">
     <div
@@ -70,6 +81,7 @@ async function onPostAdded() {
           v-for="(post, index) in posts"
           :key="index"
           :post="post"
+          @click="selectPost(post)"
         />
       </ScrollableList>
       <div

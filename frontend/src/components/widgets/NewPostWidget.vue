@@ -25,7 +25,7 @@ async function createPost() {
 }
 
 defineExpose({
-  widgetRef,
+  toggleWidget: () => widgetRef.value?.toggleWidget(),
 });
 </script>
 <template>

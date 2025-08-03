@@ -38,10 +38,10 @@ onMounted(async () => {
 });
 
 function onAvatarClick() {
-  avatarWidgetRef.value?.widgetRef.toggleWidget();
+  avatarWidgetRef.value?.toggleWidget();
 }
 function onChangePasswordClick() {
-  passwordWidgetRef.value?.widgetRef.toggleWidget();
+  passwordWidgetRef.value?.toggleWidget();
 }
 function onToggleEdit() {
   console.log("onToggleShow");

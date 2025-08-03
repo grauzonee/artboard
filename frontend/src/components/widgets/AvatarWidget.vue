@@ -35,6 +35,7 @@ defineProps({
 
 defineExpose({
   widgetRef,
+  toggleWidget: () => widgetRef.value?.toggleWidget(),
 });
 </script>
 
