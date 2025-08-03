@@ -1,9 +1,29 @@
 <script setup lang="ts">
 import ContentPanel from "@/components/ContentPanel.vue";
-import example from "@/assets/images/main1.png";
-import example2 from "@/assets/images/logo.png";
+import { ref, onMounted } from "vue";
+import { getPosts } from "@/helpers/posts.ts";
+import { getUser } from "@/helpers/user.ts";
 
-defineEmits(["addPostClick"]);
+const posts = ref([]);
+const user = ref(null);
+
+defineEmits(["postSelected", "addPostClick"]);
+
+onMounted(async () => {
+  user.value = await getUser();
+  await fetchMyPosts();
+});
+
+async function fetchMyPosts() {
+  try {
+    const myPostsData = await getPosts(1, user.value?.id, "createdAt");
+    if (myPostsData.docs && myPostsData.docs.length > 0) {
+      posts.value = myPostsData.docs;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
 </script>
 <template>
   <ContentPanel class="p-5 overflow-scroll no-scrollbar">
@@ -14,26 +34,29 @@ defineEmits(["addPostClick"]);
       <font-awesome-icon
         icon="plus"
         class="cursor-pointer h-2 text-bold pointer text-gray-500 bg-primary-orange text-white rounded-full p-1"
-        @click="$emit('addPostClick')"
+        @click="$emit('addPostClick', post)"
       />
     </div>
     <div className="grid grid-cols-2 gap-1">
-      <div class="w-100 grid gap-1">
+      <div
+        v-for="(post, index) in posts"
+        :key="index"
+        class="w-100 grid gap-1 cursor-pointer"
+        @click="$emit('postSelected', post)"
+      >
         <div>
           <img
             class="object-cover object-center h-auto max-w-full rounded-sm"
-            :src="example"
-          >
-        </div>
-      </div>
-      <div class="w-100 grid gap-1">
-        <div>
-          <img
-            class="object-cover object-center h-auto max-w-full rounded-sm"
-            :src="example2"
+            :src="post.imageUrl"
           >
         </div>
       </div>
     </div>
+    <router-link
+      :to="{ name: 'posts', params: { id: 'mine' } }"
+      class="w-full block"
+    >
+      <span class="text-xs font-bold text-center block mt-3 cursor-pointer">See all</span>
+    </router-link>
   </ContentPanel>
 </template>

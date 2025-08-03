@@ -36,9 +36,6 @@ const router = createRouter({
         {
             path: '/about',
             name: 'about',
-            // route level code-splitting
-            // this generates a separate chunk (About.[hash].js) for this route
-            // which is lazy-loaded when the route is visited.
             component: () => import('@/views/AboutView.vue'),
             meta: {
                 layout: 'DefaultLayout',
@@ -47,10 +44,16 @@ const router = createRouter({
         },
         {
             path: '/posts',
+            name: 'allPosts',
+            component: () => import('@/views/AllPostsView.vue'),
+            meta: {
+                layout: 'DefaultLayout',
+                group: GROUPS.AUTH
+            }
+        },
+        {
+            path: '/posts/:id',
             name: 'posts',
-            // route level code-splitting
-            // this generates a separate chunk (About.[hash].js) for this route
-            // which is lazy-loaded when the route is visited.
             component: () => import('@/views/PostsView.vue'),
             meta: {
                 layout: 'DefaultLayout',
@@ -60,9 +63,6 @@ const router = createRouter({
         {
             path: '/profile',
             name: 'profile',
-            // route level code-splitting
-            // this generates a separate chunk (About.[hash].js) for this route
-            // which is lazy-loaded when the route is visited.
             component: () => import('@/views/ProfileView.vue'),
             meta: {
                 layout: 'DefaultLayout',

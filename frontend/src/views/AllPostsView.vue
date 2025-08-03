@@ -1,43 +1,35 @@
 <script setup lang="ts">
 import SinglePost from "@/components/SinglePost.vue";
+import MyPosts from "@/components/tabs/MyPosts.vue";
 import NewPostWidget from "@/components/widgets/NewPostWidget.vue";
 import PostWidget from "@/components/widgets/PostWidget.vue";
+import PostFilter from "@/components/tabs/PostFilter.vue";
 import ScrollableList from "@/components/ScrollableList.vue";
 import { inject, onMounted, ref } from "vue";
 import { getPosts } from "@/helpers/posts.ts";
-import { useRoute } from "vue-router";
 
 const setMainStyle = inject("setMainStyle");
 const newPostWidget = ref(null);
 const postWidget = ref(null);
+const filtersRef = ref(null);
 const postListRef = ref(null);
 const posts = ref([]);
 const activePost = ref(null);
 const page = ref(1);
-
-const canEdit = ref(false);
-
 onMounted(async () => {
-  await setPosts();
+  await fetchPosts();
   setMainStyle?.({
     overflow: "hidden",
   });
 });
 
-async function setPosts() {
-  const route = useRoute();
-  const userId = route.params.id;
-  if (userId === "mine") {
-    canEdit.value = true;
-    await fetchPosts(null);
-    return;
-  }
-  await fetchPosts(userId);
+function onAddPostClick() {
+  newPostWidget.value?.toggleWidget();
 }
 
-async function fetchPosts(userId: string | null) {
+async function fetchPosts() {
   try {
-    const newPostsData = await getPosts(page.value, userId, "createdAt");
+    const newPostsData = await getPosts(page.value, null, "createdAt");
     if (newPostsData.docs && newPostsData.docs.length > 0) {
       posts.value = [...posts.value, ...newPostsData.docs];
       postListRef.value?.setHasNext(newPostsData.hasNext);
@@ -78,6 +70,10 @@ function selectPost(post) {
     <div
       class="flex flex-col lg:flex-row lg:flex-row gap-6 h-[calc(100%-0.8rem)]"
     >
+      <PostFilter
+        ref="filtersRef"
+        class="w-full lg:w-1/5 p-4 bg-gray-100 text-lx"
+      />
       <ScrollableList
         v-if="posts.length > 0"
         ref="postListRef"
@@ -96,6 +92,15 @@ function selectPost(post) {
       >
         <p>Loading...</p>
       </div>
+      <MqResponsive
+        target="lg+"
+        class="w-1/2 lg:w-1/4 order-1 lg:order-none"
+      >
+        <MyPosts
+          @add-post-click="onAddPostClick"
+          @post-selected="selectPost"
+        />
+      </MqResponsive>
     </div>
   </div>
 </template>
