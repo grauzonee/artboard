@@ -4,7 +4,7 @@ import type { CreatePostRequest } from "@/types/requests/CreatePostRequest";
 export async function getPosts(page: number, author: string | null, sortByDesc: string | null) {
     let url = '/posts/all?limit=10&page=' + page;
     if (author) {
-        url += '/' + author;
+        url += '&author=' + author;
     }
     if (sortByDesc) {
         url += '&sortByDesc=' + sortByDesc;

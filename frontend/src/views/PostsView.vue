@@ -2,6 +2,7 @@
 import SinglePost from "@/components/SinglePost.vue";
 import MyPosts from "@/components/tabs/MyPosts.vue";
 import NewPostWidget from "@/components/widgets/NewPostWidget.vue";
+import PostWidget from "@/components/widgets/PostWidget.vue";
 import PostFilter from "@/components/tabs/PostFilter.vue";
 import ScrollableList from "@/components/ScrollableList.vue";
 import { inject, onMounted, ref } from "vue";
@@ -51,6 +52,7 @@ async function onPostAdded() {
 }
 
 function selectPost(post) {
+  console.log(post);
   activePost.value = post;
   postWidget.value?.toggleWidget();
 }
@@ -60,7 +62,7 @@ function selectPost(post) {
     ref="newPostWidget"
     @post-added="onPostAdded"
   />
-  <postWidget
+  <PostWidget
     ref="postWidget"
     :post="activePost"
   />
@@ -94,7 +96,10 @@ function selectPost(post) {
         target="lg+"
         class="w-1/2 lg:w-1/4 order-1 lg:order-none"
       >
-        <MyPosts @add-post-click="onAddPostClick" />
+        <MyPosts
+          @add-post-click="onAddPostClick"
+          @post-selected="selectPost"
+        />
       </MqResponsive>
     </div>
   </div>
