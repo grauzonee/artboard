@@ -29,7 +29,7 @@ async function fetchPosts() {
     const newPostsData = await getPosts(page.value, null, "createdAt");
     if (newPostsData.docs && newPostsData.docs.length > 0) {
       posts.value = [...posts.value, ...newPostsData.docs];
-      postListRef.value.setHasNext(newPostsData.hasNext);
+      postListRef.value?.setHasNext(newPostsData.hasNext);
     }
   } catch (error) {
     console.log(error);

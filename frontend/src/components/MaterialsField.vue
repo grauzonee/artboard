@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import BaseInput from "@/components/BaseInput.vue";
+import SingleMaterial from "@/components/SingleMaterial.vue";
 
 const emit = defineEmits(["updateMaterials"]);
 const isAdd = ref(false);
@@ -32,13 +33,13 @@ function addMaterial() {
   emit("updateMaterials", newMaterials);
   turnAddOff();
 }
-function deleteMaterial(material) {
+function onDeleteMaterial(material) {
   let newMaterials = props.materials ?? [];
   const index = newMaterials.indexOf(material);
   if (index !== -1) {
     newMaterials.splice(index, 1);
   }
-  emit("updateMaterials", newMaterials);
+  emit("updateMaterials", newMaterials.value);
   turnAddOff();
 }
 </script>
@@ -77,22 +78,14 @@ function deleteMaterial(material) {
       </div>
     </div>
     <div class="w-full flex flex-row flex-wrap gap-1 mt-2">
-      <span
+      <SingleMaterial
         v-for="(material, index) in materials"
         :key="index"
-        class="block rounded shaded-sm px-5 py-2 bg-primary-violet text-white font-bold relative"
-      >
-        <span
-          class="absolute top-0 right-0 h-3 w-3 bg-red-600 rounded-full border border-gray-500 flex items-center justify-center text-xs cursor-pointer z-20"
-          @click="deleteMaterial(material)"
-        >
-          <font-awesome-icon
-            icon="xmark"
-            class="h-2 cursor-pointer"
-          />
-        </span>
-
-        {{ material }}</span>
+        class="px-5 py-2 text-xs"
+        :label="material"
+        :can-delete="true"
+        @delete-material="onDeleteMaterial(material)"
+      />
     </div>
   </div>
 </template>

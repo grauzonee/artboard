@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import avatar from "@/assets/images/avatar-placeholder.png";
+import SingleMaterial from "@/components/SingleMaterial.vue";
 
 defineProps({
   post: {
@@ -29,9 +30,20 @@ defineProps({
     <span class="mb-2 block px-5">
       <img :src="post.imageUrl">
     </span>
-    <span class="mb-3 text-sm">{{ post.description }}</span>
+    <span class="mb-4 block text-sm">{{ post.content }}</span>
     <div class="flex flex-row justify-between">
-      <span class="text-xs text-gray-500 block">{{ post.createdAt }}</span>
+      <div class="flex flex-row gap-2 items-center">
+        <span class="text-xs text-gray-500 block">
+          {{ post.createdAt }}
+        </span>
+
+        <SingleMaterial
+          v-for="(material, index) in post.materials"
+          :key="index"
+          class="px-1 text-sm"
+          :label="material"
+        />
+      </div>
       <font-awesome-icon
         class="text-gray-500 hover:text-red-500 cursor-pointer text-xl"
         icon="heart"
