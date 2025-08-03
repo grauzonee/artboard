@@ -9,13 +9,13 @@ export const inputs = {
             },
         }
     },
-    description: {
-        name: "description",
+    content: {
+        name: "content",
         label: "Description",
         type: "textarea"
     },
     image: {
-        name: "postImage",
+        name: "imageUrl",
         label: "Select image",
         type: "drop"
     }

@@ -2,7 +2,12 @@
 import ContentPanel from "@/components/ContentPanel.vue";
 import SelectFileInput from "@/components/SelectFileInput.vue";
 import { ref } from "vue";
-
+defineProps({
+  name: {
+    type: String,
+    default: "drag-and-drop",
+  },
+});
 const panelStyles = ref({
   "border-color": "var(--color-light-gray)",
   "border-width": "1px",
@@ -30,11 +35,18 @@ function onDrop(event) {
   resetPanelStyles();
 }
 
-function uploadFile() {
-  return selectFileRef.value.uploadFile();
+async function uploadFile(): Promise<{ name: string; path: string } | null> {
+  if (!selectFileRef.value?.uploadFile) return null;
+
+  try {
+    return await selectFileRef.value.uploadFile();
+  } catch (error) {
+    console.error("Single file upload failed:", error);
+    return null;
+  }
 }
 
-defineExpose({ uploadFile });
+defineExpose({ uploadFile, validate: () => selectFileRef.value?.validate() });
 </script>
 <template>
   <transition name="dragAndDrop">
@@ -63,6 +75,7 @@ defineExpose({ uploadFile });
       <SelectFileInput
         ref="selectFileRef"
         label="Select file..."
+        :name="name"
       />
     </ContentPanel>
   </transition>

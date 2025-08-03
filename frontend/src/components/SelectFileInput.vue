@@ -2,7 +2,9 @@
 import BaseButton from "@/components/BaseButton.vue";
 import { ref, inject } from "vue";
 import { uploadImage } from "@/helpers/media.ts";
-defineProps({
+import { FormError } from "@/types/FormError.ts";
+
+const props = defineProps({
   name: {
     type: String,
     requied: true,
@@ -11,6 +13,10 @@ defineProps({
   label: {
     type: String,
     default: "Choose file...",
+  },
+  required: {
+    type: Boolean,
+    default: true,
   },
 });
 const emit = defineEmits(["imageSelected"]);
@@ -25,8 +31,15 @@ function setFileToUpload(newValue) {
   fileToUpload.value = newValue;
 }
 function onFileChange(event) {
-  fileToUpload.value = event.target.files[0];
-  console.log(fileToUpload.value);
+  const newFile = event.target.files[0];
+  const validExtensions = ["jpg", "jpeg", "png", "gif", "bmp", "webp", "svg"];
+  const extension = newFile.name.split(".").pop().toLowerCase();
+  if (!validExtensions.includes(extension)) {
+    const formError = new FormError(["Invalid extension"]);
+    setError?.(formError);
+    return;
+  }
+  fileToUpload.value = newFile;
   emit("imageSelected");
 }
 function triggerFileSelect() {
@@ -35,21 +48,40 @@ function triggerFileSelect() {
 
 async function uploadFile() {
   if (!fileToUpload.value) {
-    setError?.("Oops, no file selected");
+    if (props.required) {
+      const formError = new FormError(["No file selected"]);
+      setError?.(formError);
+    }
     return false;
   }
   try {
     const responseData = await uploadImage(fileToUpload.value);
-    return responseData.path;
+    return { name: props.name, url: responseData.path };
   } catch (error) {
     console.log(error);
     return false;
   }
 }
+
+function validate() {
+  if (!fileToUpload.value) {
+    if (!props.required) {
+      return true;
+    }
+    return "Please select a file";
+  }
+  const validExtensions = ["jpg", "jpeg", "png", "gif", "bmp", "webp", "svg"];
+  const extension = fileToUpload.value.name.split(".").pop().toLowerCase();
+  if (!validExtensions.includes(extension)) {
+    return "Invalid extension";
+  }
+  return true;
+}
 defineExpose({
   uploadFile,
   getFileToUpload,
   setFileToUpload,
+  validate,
 });
 </script>
 

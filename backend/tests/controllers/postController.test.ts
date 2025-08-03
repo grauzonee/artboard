@@ -13,10 +13,7 @@ beforeEach(() => {
 
 describe("getPosts function", () => {
     test("return empty array when there are no posts", async () => {
-        (Post.find as jest.Mock).mockReturnValue({
-            sort: jest.fn().mockReturnThis(),
-            populate: jest.fn().mockReturnValue([])
-        });
+        (Post.paginate as jest.Mock).mockReturnValue([]);
         const req = {} as any;
         const res = {
             status: jest.fn().mockReturnThis(),
@@ -41,10 +38,7 @@ describe("getPosts function", () => {
             createdAt: createdAt,
             updatedAt: createdAt
         }];
-        (Post.find as jest.Mock).mockReturnValue({
-            sort: jest.fn().mockReturnThis(),
-            populate: jest.fn().mockReturnValue(postCollection)
-        });
+        (Post.paginate as jest.Mock).mockReturnValue(postCollection);
         const req = {} as any;
         const res = {
             status: jest.fn().mockReturnThis(),

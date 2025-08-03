@@ -38,17 +38,17 @@ onMounted(async () => {
 });
 
 function onAvatarClick() {
-  avatarWidgetRef.value?.widgetRef.toggleWidget();
+  avatarWidgetRef.value?.toggleWidget();
 }
 function onChangePasswordClick() {
-  passwordWidgetRef.value?.widgetRef.toggleWidget();
+  passwordWidgetRef.value?.toggleWidget();
 }
 function onToggleEdit() {
   console.log("onToggleShow");
 }
 
 async function onImageUpdated(url) {
-  onFieldSubmit("avatar", url);
+  onFieldSubmit(url.name, url.url);
 }
 async function onUpdateMaterials(newMaterials) {
   onFieldSubmit("materials", newMaterials);

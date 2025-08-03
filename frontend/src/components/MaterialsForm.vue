@@ -22,11 +22,29 @@ function onUpdateMaterials(newMaterials) {
   materialsRef.value = newMaterials;
 }
 
-function getFormData() {
-  const formData = formRef.value?.formData;
-  return { ...formData, materials: materialsRef.value };
+async function getFormData() {
+  try {
+    const urls = await formRef.value?.getFiles();
+    let imageFields = {};
+    if (urls.length > 0) {
+      urls.forEach((url) => {
+        imageFields[url.name] = url.url;
+      });
+    }
+    const formData = formRef.value?.formData;
+    return { ...formData, ...imageFields, materials: materialsRef.value ?? [] };
+  } catch (error) {
+    console.log(error);
+    formRef.value?.setError([error.message]);
+    return;
+  }
 }
-defineExpose({ getFormData });
+
+defineExpose({
+  getFormData,
+  setError: (error) => formRef.value?.setError(error),
+  validate: () => formRef.value?.validate(),
+});
 </script>
 
 <template>

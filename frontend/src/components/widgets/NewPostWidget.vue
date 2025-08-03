@@ -4,13 +4,28 @@ import BaseWidget from "@/components/BaseWidget.vue";
 import BaseButton from "@/components/BaseButton.vue";
 import MaterialsForm from "@/components/MaterialsForm.vue";
 import { inputs } from "@/components/inputs/NewPost.ts";
+import { addPost } from "@/helpers/posts.ts";
 
+const emit = defineEmits(["postAdded"]);
 const widgetRef = ref(null);
+const formRef = ref(null);
 
-function addPost() {}
+async function createPost() {
+  try {
+    if (formRef.value?.validate() === false) {
+      return;
+    }
+    const formData = await formRef.value?.getFormData();
+    console.log("formData", formData);
+    await addPost(formData);
+    emit("postAdded");
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 defineExpose({
-  widgetRef,
+  toggleWidget: () => widgetRef.value?.toggleWidget(),
 });
 </script>
 <template>
@@ -20,12 +35,13 @@ defineExpose({
         New post
       </p>
       <MaterialsForm
+        ref="formRef"
         :inputs="inputs"
         inputs-classes="h-20"
       />
       <BaseButton
         label="Add"
-        @click="addPost"
+        @click="createPost"
       />
     </div>
   </BaseWidget>

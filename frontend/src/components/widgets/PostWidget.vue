@@ -1,18 +1,22 @@
 <script setup lang="ts">
-import avatar from "@/assets/images/avatar-placeholder.png";
-import SingleMaterial from "@/components/SingleMaterial.vue";
+import BaseWidget from "@/components/BaseWidget.vue";
+import { ref } from "vue";
 
+const widgetRef = ref(null);
 defineProps({
   post: {
     type: Object,
     default: null,
   },
 });
+defineExpose({
+  toggleWidget: () => widgetRef.value?.toggleWidget(),
+});
 </script>
 <template>
-  <div
+  <BaseWidget
     v-if="post"
-    class="rounded-lg shadow-sm px-9 py-4 bg-light text-gray-800 glex flex-col items-center"
+    ref="widgetRef"
   >
     <div class="flex flex-row w-100 items-end gap-2 mb-4">
       <span
@@ -49,5 +53,8 @@ defineProps({
         icon="heart"
       />
     </div>
-  </div>
+    <p class="text-xl">
+      COMMENTS COMING SOON
+    </p>
+  </BaseWidget>
 </template>
