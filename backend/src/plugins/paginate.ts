@@ -8,6 +8,7 @@ export function mongoosePagination<T extends Document>(schema: Schema<T>) {
             page: rawPage = 1,
             limit: rawLimit = 10,
             populate,
+            sort,
             ...query
         } = options;
 
@@ -18,7 +19,8 @@ export function mongoosePagination<T extends Document>(schema: Schema<T>) {
 
         let queryBuilder = this.find(filter)
             .skip(skip)
-            .limit(limit);
+            .limit(limit)
+            .sort(sort);
         if (populate) {
             if (Array.isArray(populate)) {
                 populate.forEach(populateOption => {
