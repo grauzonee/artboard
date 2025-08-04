@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import BaseWidget from "@/components/BaseWidget.vue";
+import AvatarHolder from "@/components/AvatarHolder.vue";
 import { ref } from "vue";
-import avatar from "@/assets/images/avatar-placeholder.png";
+
 import BaseForm from "@/components/BaseForm.vue";
 
 const emit = defineEmits(["imageUpdated"]);
@@ -18,7 +19,6 @@ const inputs = {
 async function onImageSelected(name) {
   if (name === "avatar") {
     const urls = await formRef.value.getFiles();
-    console.log(urls);
     if (!urls[0]) {
       formRef.value.setError(["We could not upload the image :("]);
       return;
@@ -41,14 +41,7 @@ defineExpose({
 
 <template>
   <BaseWidget ref="widgetRef">
-    <div
-      class="h-2/3 max-w-full mx-auto aspect-square bg-gray-400 rounded mb-4 overflow-hidden"
-    >
-      <img
-        class="object-cover object-center h-auto max-w-full rounded-sm"
-        :src="url ?? avatar"
-      >
-    </div>
+    <AvatarHolder :url="url" class="h-2/3 max-w-fullh-2/3 max-w-full" />
     <BaseForm
       ref="formRef"
       :inputs="inputs"
