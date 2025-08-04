@@ -4,12 +4,16 @@ import type { LoginRequest } from '@/types/requests/LoginRequest';
 import type { SignUpRequest } from '@/types/requests/SignUpRequest';
 import type { UpdateUserRequest } from '@/types/requests/UpdateUserRequest';
 
-export async function getUser(): Promise<User | null> {
+export async function getUser(id: string | null): Promise<User | null> {
     if (getBearerToken() === false) {
         return null;
     }
     try {
-        const response = await axios.get('/user');
+        let url = '/user'
+        if (id) {
+            url += '?id=' + id
+        }
+        const response = await axios.get(url);
         const responseData = response.data;
         if (response.status === 200) {
             return responseData.data;
@@ -24,7 +28,9 @@ export async function logIn(formData: LoginRequest): Promise<User | null> {
     const responseData = response.data;
     if (response.status === 200 && responseData.data?.token) {
         const token = responseData.data.token;
+        const userId = responseData.data.id;
         setToken(token);
+        localStorage.setItem('userId', userId);
         return responseData.data
     }
     return null;
@@ -34,7 +40,9 @@ export async function signUp(formData: SignUpRequest): Promise<User | null> {
     const responseData = response.data;
     if (response.status === 201 && responseData.data?.token) {
         const token = responseData.data.token;
+        const userId = responseData.data.userId;
         setToken(token);
+        localStorage.setItem('userId', userId);
         return responseData.data;
     }
     return null;
@@ -46,4 +54,7 @@ export async function updateUser(formData: UpdateUserRequest): Promise<User | nu
         return responseData.data;
     }
     return null;
+}
+export function getCurrentUserId() {
+    return localStorage.getItem('userId');
 }

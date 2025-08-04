@@ -12,7 +12,7 @@ defineProps({
 <template>
   <div
     v-if="post"
-    class="rounded-lg shadow-sm px-9 py-4 bg-light text-gray-800 glex flex-col items-center"
+    class="rounded-lg shadow-sm px-9 py-4 bg-light text-gray-800 glex flex-col items-center cursor-pointer"
   >
     <div class="flex flex-row w-100 items-end gap-2 mb-4">
       <span
@@ -27,9 +27,14 @@ defineProps({
     <p class="text-2xl text-primary-violet mb-3 font-bold">
       {{ post.title }}
     </p>
-    <span class="mb-2 block px-5">
-      <img :src="post.imageUrl">
-    </span>
+    <div
+      class="max-h-64 w-full overflow-hidden flex items-center justify-center"
+    >
+      <img
+        :src="post.imageUrl"
+        class="w-full h-full object-cover object-center"
+      >
+    </div>
     <span class="mb-4 block text-sm">{{ post.content }}</span>
     <div class="flex flex-row justify-between">
       <div class="flex flex-row gap-2 items-center">
