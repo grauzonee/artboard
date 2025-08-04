@@ -26,7 +26,7 @@ defineExpose({ setHasNext });
 </script>
 <template>
   <div
-    class="flex-1 h-full overflow-scroll flex flex-col gap-5 no-scrollbar order-2 lg:order-none"
+    class="flex-1 h-full overflow-scroll flex flex-col gap-5 no-scrollbar"
     @scroll="handleScroll"
   >
     <slot />
