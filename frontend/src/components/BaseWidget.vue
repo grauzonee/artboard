@@ -16,7 +16,7 @@ defineExpose({ toggleWidget });
     class="fixed top-0 left-0 right-0 bottom-0 bg-gray-700/60 flex justify-center py-10 z-50"
   >
     <ContentPanel
-      class="md:w-1/2 w-5/6 p-3 z-100 overflow-scroll no-scrollbar relative"
+      class="md:w-1/2 w-5/6 p-3 z-100 overflow-scroll no-scrollbar relative h-fit"
     >
       <div class="w-fill text-right cursor-pointer">
         <font-awesome-icon

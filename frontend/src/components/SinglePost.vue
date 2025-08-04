@@ -1,8 +1,12 @@
 <script setup lang="ts">
 import avatar from "@/assets/images/avatar-placeholder.png";
 import SingleMaterial from "@/components/SingleMaterial.vue";
+import ConfirmationWidget from "@/components/widgets/ConfirmationWidget.vue";
+import { ref } from "vue";
+import { deletePost } from "@/helpers/posts.ts";
 
-defineProps({
+const confirmationRef = ref(null);
+const props = defineProps({
   post: {
     type: Object,
     default: null,
@@ -12,8 +16,24 @@ defineProps({
     default: false,
   },
 });
+
+const emit = defineEmits(["postDeleted"]);
+function openConfirmationWidget() {
+  confirmationRef.value?.toggleWidget();
+}
+
+async function onConfirmed() {
+  await deletePost(props.post.id);
+  emit("postDeleted");
+  confirmationRef.value?.toggleWidget();
+}
 </script>
 <template>
+  <ConfirmationWidget
+    ref="confirmationRef"
+    label="Are you sure you want to delete this post?"
+    @confirmed="onConfirmed"
+  />
   <div
     v-if="post"
     class="rounded-lg shadow-sm px-9 py-4 bg-light text-gray-800 glex flex-col items-center cursor-pointer"
@@ -33,6 +53,7 @@ defineProps({
         <font-awesome-icon
           class="text-gray-500 hover:text-red-500 cursor-pointer text-xs"
           icon="trash"
+          @click="openConfirmationWidget"
         />
         <font-awesome-icon
           class="text-gray-500 hover:text-emerald-500 cursor-pointer text-xs"

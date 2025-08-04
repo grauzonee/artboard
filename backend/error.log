@@ -22,3 +22,6 @@
 {"code":"ENOENT","errno":-2,"level":"error","path":"someURL","service":"user-service","syscall":"unlink"}
 {"code":"ENOENT","errno":-2,"level":"error","path":"firstUrl","service":"user-service","syscall":"unlink"}
 {"code":"ENOENT","errno":-2,"level":"error","path":"someURL","service":"user-service","syscall":"unlink"}
+{"level":"error","message":"ENOENT: no such file or directory, unlink 'uploads/68600b2321b078541b943d5d/1754210186314-papa-fire.jpg'","service":"user-service"}
+{"level":"error","message":"ENOENT: no such file or directory, unlink 'uploads/68600b2321b078541b943d5d/1754209278845-5411295937399223285.jpg'","service":"user-service"}
+{"level":"error","message":"ENOENT: no such file or directory, unlink 'uploads/68600b2321b078541b943d5d/1754210101658-padva-garden.jpg'","service":"user-service"}

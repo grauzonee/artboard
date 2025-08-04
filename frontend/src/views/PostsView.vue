@@ -63,9 +63,13 @@ async function onPostAdded() {
 }
 
 function selectPost(post) {
-  console.log(post);
   activePost.value = post;
   postWidget.value?.toggleWidget();
+}
+
+async function onPostDeleted() {
+  console.log("onPostDeleted");
+  await fetchPosts();
 }
 </script>
 <template>
@@ -90,6 +94,7 @@ function selectPost(post) {
           :post="post"
           :can-edit="canEdit"
           @click="selectPost(post)"
+          @post-deleted="onPostDeleted"
         />
       </ScrollableList>
       <div
