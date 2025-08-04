@@ -1,5 +1,5 @@
 import { Response, Request } from 'express'
-import { IUser, User } from "@models/User"
+import { User } from "@models/User"
 import { getUserByToken } from '@helper/auth/utils';
 
 export async function updateUser(req: Request, res: Response) {
@@ -23,7 +23,11 @@ export async function updateUser(req: Request, res: Response) {
 
 export const getProfile = async (req: Request, res: Response) => {
     try {
-        const user: IUser = await getUserByToken(req);
+        const id = req.params?.id;
+        const user = id ? await User.findById(id) : await getUserByToken(req);
+        if (!user) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
         res.status(200).json(
             { success: true, data: user.toJSON() }
         );
