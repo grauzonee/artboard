@@ -25,3 +25,10 @@ export async function addPost(formData: CreatePostRequest) {
     }
     return null;
 }
+export async function deletePost(postId: string) {
+    const response = await axios.delete('/posts/' + postId);
+    if (response.status === 200) {
+        return true;
+    }
+    return null;
+}
