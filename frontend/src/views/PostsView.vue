@@ -6,6 +6,7 @@ import ScrollableList from "@/components/ScrollableList.vue";
 import UserProfile from "@/components/tabs/UserProfile.vue";
 import { inject, onMounted, ref } from "vue";
 import { getPosts } from "@/helpers/posts.ts";
+import { getCurrentUserId } from "@/helpers/user.ts";
 import { useRoute } from "vue-router";
 
 const setMainStyle = inject("setMainStyle");
@@ -15,11 +16,11 @@ const postListRef = ref(null);
 const posts = ref([]);
 const activePost = ref(null);
 const page = ref(1);
-
 const canEdit = ref(false);
 
 onMounted(async () => {
   await setPosts();
+
   setMainStyle?.({
     overflow: "hidden",
   });
@@ -28,6 +29,7 @@ onMounted(async () => {
 async function setPosts() {
   const route = useRoute();
   const userId = route.params.id;
+  canEdit.value = getCurrentUserId() === userId;
   if (userId === "mine") {
     canEdit.value = true;
     await fetchPosts(null);
@@ -86,6 +88,7 @@ function selectPost(post) {
           v-for="(post, index) in posts"
           :key="index"
           :post="post"
+          :can-edit="canEdit"
           @click="selectPost(post)"
         />
       </ScrollableList>
