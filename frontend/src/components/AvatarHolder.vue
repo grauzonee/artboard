@@ -13,6 +13,6 @@ defineProps({
     <img
       class="object-cover object-center h-full w-full rounded-sm"
       :src="url ?? avatar"
-    />
+    >
   </div>
 </template>

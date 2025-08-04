@@ -41,7 +41,10 @@ defineExpose({
 
 <template>
   <BaseWidget ref="widgetRef">
-    <AvatarHolder :url="url" class="h-2/3 max-w-fullh-2/3 max-w-full" />
+    <AvatarHolder
+      :url="url"
+      class="h-2/3 max-w-fullh-2/3 max-w-full"
+    />
     <BaseForm
       ref="formRef"
       :inputs="inputs"

@@ -3,6 +3,7 @@ import SinglePost from "@/components/SinglePost.vue";
 import NewPostWidget from "@/components/widgets/NewPostWidget.vue";
 import PostWidget from "@/components/widgets/PostWidget.vue";
 import ScrollableList from "@/components/ScrollableList.vue";
+import UserProfile from "@/components/tabs/UserProfile.vue";
 import { inject, onMounted, ref } from "vue";
 import { getPosts } from "@/helpers/posts.ts";
 import { useRoute } from "vue-router";
@@ -75,9 +76,7 @@ function selectPost(post) {
     :post="activePost"
   />
   <div class="posts-page h-full">
-    <div
-      class="flex flex-col lg:flex-row lg:flex-row gap-6 h-[calc(100%-0.8rem)]"
-    >
+    <div class="flex flex-row gap-6 h-[calc(100%-0.8rem)]">
       <ScrollableList
         v-if="posts.length > 0"
         ref="postListRef"
@@ -96,6 +95,12 @@ function selectPost(post) {
       >
         <p>Loading...</p>
       </div>
+      <MqResponsive
+        target="md+"
+        class="w-1/3"
+      >
+        <UserProfile />
+      </MqResponsive>
     </div>
   </div>
 </template>

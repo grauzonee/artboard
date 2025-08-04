@@ -18,7 +18,7 @@ defineProps({
       <span
         class="rounded-full boder border-gray-800 h-16 w-16 overflow-hidden"
       >
-        <img :src="post.author?.avatar ?? avatar" />
+        <img :src="post.author?.avatar ?? avatar">
       </span>
       <span class="text-base block font-bold mb-3">{{
         post.author.username
@@ -33,7 +33,7 @@ defineProps({
       <img
         :src="post.imageUrl"
         class="w-full h-full object-cover object-center"
-      />
+      >
     </div>
     <span class="mb-4 block text-sm">{{ post.content }}</span>
     <div class="flex flex-row justify-between">
