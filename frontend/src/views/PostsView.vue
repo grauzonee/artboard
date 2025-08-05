@@ -4,6 +4,7 @@ import NewPostWidget from "@/components/widgets/NewPostWidget.vue";
 import PostWidget from "@/components/widgets/PostWidget.vue";
 import ScrollableList from "@/components/ScrollableList.vue";
 import UserProfile from "@/components/tabs/UserProfile.vue";
+import BarMenu from "@/components/BarMenu.vue";
 import { inject, onMounted, ref } from "vue";
 import { getPosts } from "@/helpers/posts.ts";
 import { getCurrentUserId } from "@/helpers/user.ts";
@@ -71,6 +72,18 @@ async function onPostDeleted() {
   console.log("onPostDeleted");
   await fetchPosts();
 }
+
+const barMenuItems = [
+  {
+    label: "Posts",
+  },
+  {
+    label: "Comments",
+  },
+  {
+    label: "Liked",
+  },
+];
 </script>
 <template>
   <NewPostWidget
@@ -83,26 +96,33 @@ async function onPostDeleted() {
   />
   <div class="posts-page h-full">
     <div class="flex flex-row gap-6 h-[calc(100%-0.8rem)]">
-      <ScrollableList
-        v-if="posts.length > 0"
-        ref="postListRef"
-        @load-more="onLoadMore"
-      >
-        <SinglePost
-          v-for="(post, index) in posts"
-          :key="index"
-          :post="post"
-          :can-edit="canEdit"
-          @click="selectPost(post)"
-          @post-deleted="onPostDeleted"
+      <div class="flex flex-col w-full">
+        <BarMenu
+          :items="barMenuItems"
+          class="mb-5"
         />
-      </ScrollableList>
-      <div
-        v-else
-        class="flex-1"
-      >
-        <p>Loading...</p>
+        <ScrollableList
+          v-if="posts.length > 0"
+          ref="postListRef"
+          @load-more="onLoadMore"
+        >
+          <SinglePost
+            v-for="(post, index) in posts"
+            :key="index"
+            :post="post"
+            :can-edit="canEdit"
+            @click="selectPost(post)"
+            @post-deleted="onPostDeleted"
+          />
+        </ScrollableList>
+        <div
+          v-else
+          class="flex-1"
+        >
+          <p>Loading...</p>
+        </div>
       </div>
+
       <MqResponsive
         target="md+"
         class="w-1/3"
