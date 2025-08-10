@@ -2,9 +2,10 @@
 import avatar from "@/assets/images/avatar-placeholder.png";
 import SingleMaterial from "@/components/SingleMaterial.vue";
 import ConfirmationWidget from "@/components/widgets/ConfirmationWidget.vue";
-import { ref } from "vue";
+import { ref, inject } from "vue";
 import { deletePost } from "@/helpers/posts.ts";
 
+const onSelectPost = inject("onSelectPost");
 const confirmationRef = ref(null);
 const props = defineProps({
   post: {
@@ -22,8 +23,13 @@ function openConfirmationWidget() {
   confirmationRef.value?.toggleWidget();
 }
 
+function selectPost(post) {
+  console.log("ggg");
+  onSelectPost?.(post);
+}
 async function onConfirmed() {
   await deletePost(props.post.id);
+  console.log("onConfirmed");
   emit("postDeleted");
   confirmationRef.value?.toggleWidget();
 }
@@ -37,6 +43,7 @@ async function onConfirmed() {
   <div
     v-if="post"
     class="rounded-lg shadow-sm px-9 py-4 bg-light text-gray-800 glex flex-col items-center cursor-pointer"
+    @click="selectPost(post)"
   >
     <div class="flex flex-row w-100 items-end gap-2 mb-4 justify-between">
       <div class="flex flex-row w-1/3 justify-between items-end">

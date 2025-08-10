@@ -24,6 +24,8 @@ async function fetchMyPosts() {
     console.log(error);
   }
 }
+
+defineExpose({ fetchMyPosts });
 </script>
 <template>
   <ContentPanel class="p-5 overflow-scroll no-scrollbar">

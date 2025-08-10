@@ -40,13 +40,6 @@ defineExpose({
         <span class="text-xs text-gray-500 block">
           {{ post.createdAt }}
         </span>
-
-        <SingleMaterial
-          v-for="(material, index) in post.materials"
-          :key="index"
-          class="px-1 text-sm"
-          :label="material"
-        />
       </div>
       <font-awesome-icon
         class="text-gray-500 hover:text-red-500 cursor-pointer text-xl"

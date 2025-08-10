@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, inject } from "vue";
 
-const emit = defineEmits(["loadMore"]);
 const scrolledToEnd = ref(false);
 const hasNext = ref(true);
+const page = ref(1);
+const loadMoreCallback = inject("loadMoreCallback");
 
 function handleScroll(event) {
   const { scrollTop, clientHeight, scrollHeight } = event.target;
@@ -13,8 +14,10 @@ function handleScroll(event) {
   }
 }
 
-function onLoadMoreClick() {
-  emit("loadMore");
+async function onLoadMoreClick() {
+  page.value++;
+  const hasNext = await loadMoreCallback?.(page.value);
+  setHasNext(hasNext);
   scrolledToEnd.value = false;
 }
 
@@ -22,7 +25,14 @@ function setHasNext(newValue: bool) {
   hasNext.value = newValue;
 }
 
-defineExpose({ setHasNext });
+function setPage(newPage: number) {
+  page.value = newPage;
+}
+
+function getPage() {
+  return page.value;
+}
+defineExpose({ setHasNext, getPage, setPage });
 </script>
 <template>
   <div
