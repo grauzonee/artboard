@@ -36,7 +36,9 @@ defineExpose({ fetchMyPosts });
 <template>
   <ContentPanel class="p-5 overflow-scroll no-scrollbar max-h-full">
     <div class="w-100 flex flex-row justify-between mb-3">
-      <p class="h3 uppercase text-lightGray">My gallery</p>
+      <p class="h3 uppercase text-lightGray">
+        My gallery
+      </p>
       <font-awesome-icon
         icon="plus"
         class="cursor-pointer h-2 text-bold pointer text-gray-500 bg-primary-orange text-white rounded-full p-1"
@@ -54,7 +56,7 @@ defineExpose({ fetchMyPosts });
           <img
             class="object-cover object-center h-auto max-w-full rounded-sm"
             :src="post.imageUrl"
-          />
+          >
         </div>
       </div>
     </div>
@@ -62,9 +64,7 @@ defineExpose({ fetchMyPosts });
       :to="{ name: 'posts', params: { id: 'mine' } }"
       class="w-full block"
     >
-      <span class="text-xs font-bold text-center block mt-3 cursor-pointer"
-        >See all</span
-      >
+      <span class="text-xs font-bold text-center block mt-3 cursor-pointer">See all</span>
     </router-link>
   </ContentPanel>
 </template>

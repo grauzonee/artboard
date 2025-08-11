@@ -8,6 +8,10 @@ defineProps({
     type: Object,
     default: null,
   },
+  isEdit: {
+    type: Boolean,
+    default: false,
+  },
 });
 defineExpose({
   toggleWidget: () => widgetRef.value?.toggleWidget(),

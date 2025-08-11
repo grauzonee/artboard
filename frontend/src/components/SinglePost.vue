@@ -6,6 +6,7 @@ import { ref, inject } from "vue";
 import { deletePost } from "@/helpers/posts.ts";
 
 const onSelectPost = inject("onSelectPost");
+const onEditPost = inject("onEditPost");
 const confirmationRef = ref(null);
 const props = defineProps({
   post: {
@@ -18,18 +19,16 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["postDeleted"]);
+const emit = defineEmits(["postDeleted", "editPost"]);
 function openConfirmationWidget() {
   confirmationRef.value?.toggleWidget();
 }
 
 function selectPost(post) {
-  console.log("ggg");
   onSelectPost?.(post);
 }
 async function onConfirmed() {
   await deletePost(props.post.id);
-  console.log("onConfirmed");
   emit("postDeleted");
   confirmationRef.value?.toggleWidget();
 }
@@ -65,6 +64,7 @@ async function onConfirmed() {
         <font-awesome-icon
           class="text-gray-500 hover:text-emerald-500 cursor-pointer text-xs"
           icon="pencil"
+          @click="onEditPost?.(post)"
         />
       </div>
     </div>
