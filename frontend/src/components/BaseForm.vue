@@ -10,19 +10,25 @@ import { FormInput } from "@/types/FormInput.ts";
 // Ref for FormMessage component
 const messageRef = ref(null);
 const inputRefs = reactive<Record<string, object>>({});
-const formData = reactive({});
 
-const props = defineProps<{
+const props = defineProps({
   inputs: {
-    type: FormInput[];
-    required: true;
-  };
+    type: Array<FormInput>,
+    required: true,
+  },
+  inputsData: {
+    type: Object,
+    default: () => {
+      return {};
+    },
+  },
   inputsClasses: {
-    type: string;
-    default: "h-24";
-  };
-}>();
+    type: String,
+    default: "h-24",
+  },
+});
 
+const formData = reactive(props.inputsData);
 const emit = defineEmits(["imageSelected"]);
 
 const formInputs = ref<InputInstance[]>(props.inputs);

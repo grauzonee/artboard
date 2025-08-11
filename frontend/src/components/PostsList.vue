@@ -36,7 +36,6 @@ async function setPosts() {
 async function fetchPosts(page: int | null) {
   try {
     const newPostsData = await getPosts(page, props.postFilter as PostFilter);
-    console.log("newPostsData", newPostsData.docs);
     if (newPostsData.docs && newPostsData.docs.length > 0) {
       posts.value = [...posts.value, ...newPostsData.docs];
       return newPostsData.hasNext;
@@ -58,22 +57,21 @@ provide("loadMoreCallback", fetchPosts);
 defineExpose({ refreshFeed });
 </script>
 <template>
-  <ScrollableList
-    v-if="posts.length > 0"
-    ref="baseListRef"
-  >
-    <SinglePost
-      v-for="(post, index) in posts"
-      :key="index"
-      :post="post"
-      :can-edit="canEdit"
-      @post-deleted="refreshFeed"
-    />
+  <ScrollableList ref="baseListRef">
+    <template v-if="posts.length > 0">
+      <SinglePost
+        v-for="(post, index) in posts"
+        :key="index"
+        :post="post"
+        :can-edit="canEdit"
+        @post-deleted="refreshFeed"
+      />
+    </template>
+    <div
+      v-else
+      class="flex-1"
+    >
+      <p>Loading...</p>
+    </div>
   </ScrollableList>
-  <div
-    v-else
-    class="flex-1"
-  >
-    <p>Loading...</p>
-  </div>
 </template>

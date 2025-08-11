@@ -26,7 +26,8 @@ function setHasNext(newValue: bool) {
 }
 
 function setPage(newPage: number) {
-  page.value = newPage;
+  console.log("newPage", newPage);
+  page.value = newPage ?? 1;
 }
 
 function getPage() {

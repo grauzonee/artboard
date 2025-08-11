@@ -9,6 +9,7 @@ const emit = defineEmits(["search"]);
 const showFilters = ref(false);
 const formRef = ref(null);
 const updatePostFilter = inject("updatePostFilter");
+const inputsData = ref({});
 
 function toggleShowFilters() {
   showFilters.value = !showFilters.value;
@@ -16,15 +17,22 @@ function toggleShowFilters() {
 
 async function search() {
   const formData = await formRef.value?.getFormData();
-  console.log("formData", formData);
-
   Object.entries(formData).forEach(([key, value]) => {
     if (value) {
       updatePostFilter(key, value);
     }
   });
   emit("search");
+  inputsData.value = formData;
+  toggleShowFilters();
+}
 
+function clearFilters() {
+  Object.keys(inputsData.value).forEach((key) => {
+    updatePostFilter(key, null);
+  });
+  inputsData.value = {};
+  emit("search");
   toggleShowFilters();
 }
 defineExpose({ showFilters, toggleShowFilters });
@@ -56,10 +64,15 @@ defineExpose({ showFilters, toggleShowFilters });
           ref="formRef"
           :inputs="inputs"
           inputs-classes="h-18"
+          :inputs-data="inputsData"
         />
         <BaseButton
           label="Search"
           @click="search"
+        />
+        <BaseButton
+          label="Clear filters"
+          @click="clearFilters"
         />
       </ContentPanel>
     </div>

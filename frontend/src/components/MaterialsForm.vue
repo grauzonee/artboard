@@ -7,16 +7,22 @@ import { ref } from "vue";
 const materialsRef = ref(null);
 const formRef = ref(null);
 
-defineProps<{
+defineProps({
   inputs: {
-    type: FormInput[];
-    required: true;
-  };
+    type: Array<FormInput>,
+    required: true,
+  },
   inputsClasses: {
-    type: string;
-    default: "h-24";
-  };
-}>();
+    type: String,
+    default: "h-24",
+  },
+  inputsData: {
+    type: Object,
+    default: () => {
+      return {};
+    },
+  },
+});
 
 function onUpdateMaterials(newMaterials) {
   materialsRef.value = newMaterials;
@@ -52,6 +58,7 @@ defineExpose({
     ref="formRef"
     :inputs="inputs"
     :inputs-classes="inputsClasses"
+    :inputs-data="inputsData"
   />
   <MaterialsField
     class="mb-3"
