@@ -1,7 +1,10 @@
 <script setup lang="ts">
-import BaseForm from "@/components/BaseForm.vue";
+import MaterialsForm from "@/components/MaterialsForm.vue";
 import BaseButton from "@/components/BaseButton.vue";
 import ContentPanel from "@/components/ContentPanel.vue";
+import { PostFilterData, PostFilter } from "@/types/PostFilter.ts";
+import { getPosts } from "@/helpers/posts.ts";
+
 import { ref } from "vue";
 import { inputs } from "@/components/inputs/PostFilter.ts";
 const showFilters = ref(false);
@@ -11,8 +14,12 @@ function toggleShowFilters() {
   showFilters.value = !showFilters.value;
 }
 
-function search() {
-  console.log(formRef?.value.formData);
+async function search() {
+  const formData = await formRef.value?.getFormData();
+  const postFilter = new PostFilter(formData as PostFilterData);
+
+  await getPosts(1, postFilter);
+  console.log("formData", formData);
   toggleShowFilters();
 }
 defineExpose({ showFilters, toggleShowFilters });
@@ -40,7 +47,7 @@ defineExpose({ showFilters, toggleShowFilters });
           class="h-8 lg:h-4 pointer hover:text-emerald-500"
           @click="toggleShowFilters"
         />
-        <BaseForm
+        <MaterialsForm
           ref="formRef"
           :inputs="inputs"
           inputs-classes="h-18"

@@ -16,7 +16,6 @@ async function createPost() {
       return;
     }
     const formData = await formRef.value?.getFormData();
-    console.log("formData", formData);
     await addPost(formData);
     emit("postAdded");
   } catch (error) {

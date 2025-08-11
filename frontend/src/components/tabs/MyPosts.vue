@@ -3,25 +3,31 @@ import ContentPanel from "@/components/ContentPanel.vue";
 import { ref, onMounted } from "vue";
 import { getPosts } from "@/helpers/posts.ts";
 import { getUser } from "@/helpers/user.ts";
+import { PostFilter } from "@/types/PostFilter.ts";
 
 const posts = ref([]);
 const user = ref(null);
+let postFilter = null;
 
 defineEmits(["postSelected", "addPostClick"]);
 
 onMounted(async () => {
   user.value = await getUser();
+  postFilter = new PostFilter({
+    author: user.value.id,
+    sortByDesc: "createdAt",
+  });
   await fetchMyPosts();
 });
 
 async function fetchMyPosts() {
   try {
-    const myPostsData = await getPosts(1, user.value?.id, "createdAt");
+    const myPostsData = await getPosts(1, postFilter);
     if (myPostsData.docs && myPostsData.docs.length > 0) {
       posts.value = myPostsData.docs;
     }
   } catch (error) {
-    console.log(error);
+    console.log("ERROR", error);
   }
 }
 

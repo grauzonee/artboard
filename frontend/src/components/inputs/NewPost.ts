@@ -18,5 +18,5 @@ export const inputs = {
         name: "imageUrl",
         label: "Select image",
         type: "drop"
-    }
+    },
 }

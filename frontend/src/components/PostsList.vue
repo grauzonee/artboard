@@ -5,9 +5,11 @@ import { ref, onMounted, provide } from "vue";
 import { getPosts } from "@/helpers/posts.ts";
 import { getCurrentUserId } from "@/helpers/user.ts";
 import { useRoute } from "vue-router";
+import { PostFilter } from "@/types/PostFilter.ts";
 
 const canEdit = ref(false);
 const baseListRef = ref(null);
+let postFilter = null;
 
 let userId = null;
 
@@ -24,12 +26,16 @@ async function setPosts() {
     canEdit.value = true;
   }
   console.log("User id", userId);
+  postFilter = new PostFilter({
+    author: userId,
+    sortByDesc: "createdAt",
+  });
   await fetchPosts(1);
 }
 
 async function fetchPosts(page: int | null) {
   try {
-    const newPostsData = await getPosts(page, userId, "createdAt");
+    const newPostsData = await getPosts(page, postFilter);
     if (newPostsData.docs && newPostsData.docs.length > 0) {
       posts.value = [...posts.value, ...newPostsData.docs];
       return newPostsData.hasNext;
