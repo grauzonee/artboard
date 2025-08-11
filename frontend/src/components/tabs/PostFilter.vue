@@ -2,13 +2,13 @@
 import MaterialsForm from "@/components/MaterialsForm.vue";
 import BaseButton from "@/components/BaseButton.vue";
 import ContentPanel from "@/components/ContentPanel.vue";
-import { PostFilterData, PostFilter } from "@/types/PostFilter.ts";
-import { getPosts } from "@/helpers/posts.ts";
-
-import { ref } from "vue";
+import { ref, inject } from "vue";
 import { inputs } from "@/components/inputs/PostFilter.ts";
+
+const emit = defineEmits(["search"]);
 const showFilters = ref(false);
 const formRef = ref(null);
+const updatePostFilter = inject("updatePostFilter");
 
 function toggleShowFilters() {
   showFilters.value = !showFilters.value;
@@ -16,10 +16,15 @@ function toggleShowFilters() {
 
 async function search() {
   const formData = await formRef.value?.getFormData();
-  const postFilter = new PostFilter(formData as PostFilterData);
-
-  await getPosts(1, postFilter);
   console.log("formData", formData);
+
+  Object.entries(formData).forEach(([key, value]) => {
+    if (value) {
+      updatePostFilter(key, value);
+    }
+  });
+  emit("search");
+
   toggleShowFilters();
 }
 defineExpose({ showFilters, toggleShowFilters });

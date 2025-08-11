@@ -17,7 +17,6 @@ export async function getPosts(page: number, filters: PostFilter | null) {
 
     const response = await axios.get(url, { params: urlParams });
     const responseData = response.data;
-    console.log(responseData.data.docs);
     if (response.status === 200) {
         return responseData.data;
     }

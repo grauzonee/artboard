@@ -7,9 +7,14 @@ import { getCurrentUserId } from "@/helpers/user.ts";
 import { useRoute } from "vue-router";
 import { PostFilter } from "@/types/PostFilter.ts";
 
+const props = defineProps({
+  postFilter: {
+    required: true,
+    type: PostFilter,
+  },
+});
 const canEdit = ref(false);
 const baseListRef = ref(null);
-let postFilter = null;
 
 let userId = null;
 
@@ -25,17 +30,13 @@ async function setPosts() {
     userId = getCurrentUserId();
     canEdit.value = true;
   }
-  console.log("User id", userId);
-  postFilter = new PostFilter({
-    author: userId,
-    sortByDesc: "createdAt",
-  });
   await fetchPosts(1);
 }
 
 async function fetchPosts(page: int | null) {
   try {
-    const newPostsData = await getPosts(page, postFilter);
+    const newPostsData = await getPosts(page, props.postFilter as PostFilter);
+    console.log("newPostsData", newPostsData.docs);
     if (newPostsData.docs && newPostsData.docs.length > 0) {
       posts.value = [...posts.value, ...newPostsData.docs];
       return newPostsData.hasNext;
@@ -49,7 +50,7 @@ async function fetchPosts(page: int | null) {
 async function refreshFeed(page: number | null) {
   posts.value = [];
   if (page != null) baseListRef.value?.setPage(page);
-  await fetchPosts(baseListRef.value?.getPage());
+  await fetchPosts(baseListRef.value?.getPage(), props.postFilter);
 }
 
 const posts = ref([]);
