@@ -4,10 +4,9 @@ import MaterialsField from "@/components/MaterialsField.vue";
 import { FormInput } from "@/types/FormInput.ts";
 import { ref } from "vue";
 
-const materialsRef = ref(null);
 const formRef = ref(null);
 
-defineProps({
+const props = defineProps({
   inputs: {
     type: Array<FormInput>,
     required: true,
@@ -24,8 +23,10 @@ defineProps({
   },
 });
 
+const materials = ref(props.inputsData?.materials ?? []);
+
 function onUpdateMaterials(newMaterials) {
-  materialsRef.value = newMaterials;
+  materials.value = newMaterials;
 }
 
 async function getFormData() {
@@ -38,7 +39,7 @@ async function getFormData() {
       });
     }
     const formData = formRef.value?.formData;
-    return { ...formData, ...imageFields, materials: materialsRef.value ?? [] };
+    return { ...formData, ...imageFields, materials: materials.value ?? [] };
   } catch (error) {
     console.log(error);
     formRef.value?.setError([error.message]);
@@ -62,7 +63,7 @@ defineExpose({
   />
   <MaterialsField
     class="mb-3"
-    :materials="materialsRef ?? []"
+    :materials="materials ?? []"
     @update-materials="onUpdateMaterials"
   />
 </template>
