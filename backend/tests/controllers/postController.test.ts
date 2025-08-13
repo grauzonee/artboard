@@ -3,7 +3,7 @@ jest.mock('@models/Post');
 import { Post } from '@models/Post';
 import { Request, Response } from 'express';
 jest.mock('@controllers/mediaController');
-import { deleteImage } from '@controllers/mediaController';
+import { deleteImage, sanitizeImageUrl } from '@controllers/mediaController';
 
 const createdAt = Date();
 
@@ -171,6 +171,7 @@ describe("createPost function", () => {
 describe('updatePost function', () => {
     test("Should return 200 when post was found", async () => {
         (deleteImage as jest.Mock).mockResolvedValue(true);
+        (sanitizeImageUrl as jest.Mock).mockImplementation((arg) => arg);
         const returnedPost = {
             title: "First title",
             content: "First content",

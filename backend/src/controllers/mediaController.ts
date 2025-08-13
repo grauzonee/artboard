@@ -11,5 +11,6 @@ export const checkImage = (imagePath: string): boolean => {
 }
 
 export const sanitizeImageUrl = (imageUrl: string): string => {
-    return imageUrl.replace(getConfigValue('HOST') + '/', '')
+    console.log(imageUrl.replace(getConfigValue('HOST') + '/', ''));
+    return imageUrl.replace(getConfigValue('HOST') + '/', '');
 }
