@@ -4,22 +4,29 @@ import MaterialsField from "@/components/MaterialsField.vue";
 import { FormInput } from "@/types/FormInput.ts";
 import { ref } from "vue";
 
-const materialsRef = ref(null);
 const formRef = ref(null);
 
-defineProps<{
+const props = defineProps({
   inputs: {
-    type: FormInput[];
-    required: true;
-  };
+    type: Array<FormInput>,
+    required: true,
+  },
   inputsClasses: {
-    type: string;
-    default: "h-24";
-  };
-}>();
+    type: String,
+    default: "h-24",
+  },
+  inputsData: {
+    type: Object,
+    default: () => {
+      return {};
+    },
+  },
+});
+
+const materials = ref(props.inputsData?.materials ?? []);
 
 function onUpdateMaterials(newMaterials) {
-  materialsRef.value = newMaterials;
+  materials.value = newMaterials;
 }
 
 async function getFormData() {
@@ -32,7 +39,7 @@ async function getFormData() {
       });
     }
     const formData = formRef.value?.formData;
-    return { ...formData, ...imageFields, materials: materialsRef.value ?? [] };
+    return { ...formData, ...imageFields, materials: materials.value ?? [] };
   } catch (error) {
     console.log(error);
     formRef.value?.setError([error.message]);
@@ -52,10 +59,11 @@ defineExpose({
     ref="formRef"
     :inputs="inputs"
     :inputs-classes="inputsClasses"
+    :inputs-data="inputsData"
   />
   <MaterialsField
     class="mb-3"
-    :materials="materialsRef ?? []"
+    :materials="materials ?? []"
     @update-materials="onUpdateMaterials"
   />
 </template>

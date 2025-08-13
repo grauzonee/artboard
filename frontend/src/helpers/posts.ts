@@ -1,17 +1,22 @@
 import { api as axios } from '@/lib/axios'
 import type { CreatePostRequest } from "@/types/requests/CreatePostRequest";
+import { PostFilter } from '@/types/PostFilter';
 
-export async function getPosts(page: number, author: string | null, sortByDesc: string | null) {
-    let url = '/posts/all?limit=10&page=' + page;
-    if (author) {
-        url += '&author=' + author;
+export async function getPosts(page: number, filters: PostFilter | null) {
+    const url = '/posts/all';
+    const urlParams = new URLSearchParams({
+        page: page.toString()
+    });
+
+    if (filters) {
+        const filterParams = filters.toURLSearchParams();
+        filterParams.forEach((value, key) => {
+            urlParams.append(key, value);
+        });
     }
-    if (sortByDesc) {
-        url += '&sortByDesc=' + sortByDesc;
-    }
-    const response = await axios.get(url);
+
+    const response = await axios.get(url, { params: urlParams });
     const responseData = response.data;
-    console.log(responseData.data.docs);
     if (response.status === 200) {
         return responseData.data;
     }

@@ -1,0 +1,20 @@
+<script setup lang="ts">
+import BaseButton from "@/components/BaseButton.vue";
+defineProps({
+  items: {
+    type: Object,
+    default: () => [],
+  },
+});
+</script>
+<template>
+  <div class="w-full flex flex-row justify-between gap-4">
+    <BaseButton
+      v-for="[item, index] in Object.entries(items)"
+      :key="index"
+      :label="item.label"
+      bg-color="bg-lightGray hover:bg-primary-violet hover:text-white"
+      text-color="text-primary-violet"
+    />
+  </div>
+</template>

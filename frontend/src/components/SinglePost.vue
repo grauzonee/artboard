@@ -2,9 +2,11 @@
 import avatar from "@/assets/images/avatar-placeholder.png";
 import SingleMaterial from "@/components/SingleMaterial.vue";
 import ConfirmationWidget from "@/components/widgets/ConfirmationWidget.vue";
-import { ref } from "vue";
+import { ref, inject } from "vue";
 import { deletePost } from "@/helpers/posts.ts";
 
+const onSelectPost = inject("onSelectPost");
+const onEditPost = inject("onEditPost");
 const confirmationRef = ref(null);
 const props = defineProps({
   post: {
@@ -17,11 +19,14 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["postDeleted"]);
+const emit = defineEmits(["postDeleted", "editPost"]);
 function openConfirmationWidget() {
   confirmationRef.value?.toggleWidget();
 }
 
+function selectPost(post) {
+  onSelectPost?.(post);
+}
 async function onConfirmed() {
   await deletePost(props.post.id);
   emit("postDeleted");
@@ -37,6 +42,7 @@ async function onConfirmed() {
   <div
     v-if="post"
     class="rounded-lg shadow-sm px-9 py-4 bg-light text-gray-800 glex flex-col items-center cursor-pointer"
+    @click="selectPost(post)"
   >
     <div class="flex flex-row w-100 items-end gap-2 mb-4 justify-between">
       <div class="flex flex-row w-1/3 justify-between items-end">
@@ -58,6 +64,7 @@ async function onConfirmed() {
         <font-awesome-icon
           class="text-gray-500 hover:text-emerald-500 cursor-pointer text-xs"
           icon="pencil"
+          @click="onEditPost?.(post)"
         />
       </div>
     </div>

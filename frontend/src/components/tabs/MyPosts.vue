@@ -3,30 +3,38 @@ import ContentPanel from "@/components/ContentPanel.vue";
 import { ref, onMounted } from "vue";
 import { getPosts } from "@/helpers/posts.ts";
 import { getUser } from "@/helpers/user.ts";
+import { PostFilter } from "@/types/PostFilter.ts";
 
 const posts = ref([]);
 const user = ref(null);
+let postFilter = null;
 
 defineEmits(["postSelected", "addPostClick"]);
 
 onMounted(async () => {
   user.value = await getUser();
+  postFilter = new PostFilter({
+    author: user.value.id,
+    sortByDesc: "createdAt",
+  });
   await fetchMyPosts();
 });
 
 async function fetchMyPosts() {
   try {
-    const myPostsData = await getPosts(1, user.value?.id, "createdAt");
+    const myPostsData = await getPosts(1, postFilter);
     if (myPostsData.docs && myPostsData.docs.length > 0) {
       posts.value = myPostsData.docs;
     }
   } catch (error) {
-    console.log(error);
+    console.log("ERROR", error);
   }
 }
+
+defineExpose({ fetchMyPosts });
 </script>
 <template>
-  <ContentPanel class="p-5 overflow-scroll no-scrollbar">
+  <ContentPanel class="p-5 overflow-scroll no-scrollbar max-h-full">
     <div class="w-100 flex flex-row justify-between mb-3">
       <p class="h3 uppercase text-lightGray">
         My gallery

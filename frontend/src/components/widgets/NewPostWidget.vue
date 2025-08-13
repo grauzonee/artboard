@@ -9,6 +9,13 @@ import { addPost } from "@/helpers/posts.ts";
 const emit = defineEmits(["postAdded"]);
 const widgetRef = ref(null);
 const formRef = ref(null);
+defineProps({
+  post: {
+    type: Object,
+    required: false,
+    default: null,
+  },
+});
 
 async function createPost() {
   try {
@@ -16,7 +23,6 @@ async function createPost() {
       return;
     }
     const formData = await formRef.value?.getFormData();
-    console.log("formData", formData);
     await addPost(formData);
     emit("postAdded");
   } catch (error) {
@@ -38,6 +44,7 @@ defineExpose({
         ref="formRef"
         :inputs="inputs"
         inputs-classes="h-20"
+        :inputs-data="post ?? {}"
       />
       <BaseButton
         label="Add"
