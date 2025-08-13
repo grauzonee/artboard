@@ -1,6 +1,6 @@
 import { Post } from '@models/Post';
 import { Request, Response } from 'express';
-import { deleteImage } from '@controllers/mediaController';
+import { deleteImage, sanitizeImageUrl } from '@controllers/mediaController';
 import { logger } from '@helper/loggerHelper';
 import { PaginationOptions } from 'types/pagination';
 
@@ -67,8 +67,14 @@ export async function updatePost(req: Request, res: Response) {
         return res.status(404).json({ success: false, message: "Post not found" });
     }
     const originalImageUrl = post.imageUrl;
+    if (imageUrl) {
+
+        const sanitizedImageUrl = sanitizeImageUrl(imageUrl);
+        console.log("full", imageUrl)
+        console.log("sanitized", sanitizedImageUrl)
+        post.imageUrl = sanitizedImageUrl && sanitizedImageUrl !== post.imageUrl ? sanitizedImageUrl : post.imageUrl;
+    }
     post.title = title ?? post.title;
-    post.imageUrl = imageUrl ?? post.imageUrl;
     post.materials = materials ?? post.materials;
     post.content = content ?? post.content;
     await post.save().then(async (savedPost) => {

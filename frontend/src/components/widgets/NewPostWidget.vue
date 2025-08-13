@@ -1,30 +1,43 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import BaseWidget from "@/components/BaseWidget.vue";
 import BaseButton from "@/components/BaseButton.vue";
 import MaterialsForm from "@/components/MaterialsForm.vue";
 import { inputs } from "@/components/inputs/NewPost.ts";
-import { addPost } from "@/helpers/posts.ts";
+import { addPost, updatePost } from "@/helpers/posts.ts";
 
-const emit = defineEmits(["postAdded"]);
+const emit = defineEmits(["formSubmitted"]);
 const widgetRef = ref(null);
 const formRef = ref(null);
-defineProps({
+const props = defineProps({
   post: {
     type: Object,
     required: false,
     default: null,
   },
 });
+const editedPost = ref(props.post ? { ...props.post } : {});
 
-async function createPost() {
+onMounted(() => {
+  if (props.post) {
+    inputs.imageUrl.required = false;
+  }
+});
+
+async function submitForm() {
   try {
     if (formRef.value?.validate() === false) {
       return;
     }
     const formData = await formRef.value?.getFormData();
-    await addPost(formData);
-    emit("postAdded");
+    console.log("formData", formData);
+    if (props.post) {
+      await updatePost(props.post.id, formData);
+    } else {
+      await addPost(formData);
+    }
+    emit("formSubmitted");
+    widgetRef.value?.toggleWidget();
   } catch (error) {
     console.log(error);
   }
@@ -44,11 +57,11 @@ defineExpose({
         ref="formRef"
         :inputs="inputs"
         inputs-classes="h-20"
-        :inputs-data="post ?? {}"
+        :inputs-data="editedPost ?? {}"
       />
       <BaseButton
-        label="Add"
-        @click="createPost"
+        :label="post ? 'Save' : 'Add'"
+        @click="submitForm"
       />
     </div>
   </BaseWidget>

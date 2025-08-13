@@ -17,8 +17,13 @@ provide("setMainStyle", setMainStyle);
     <header class="header">
       <BaseTopbar />
     </header>
-    <main class="main px-24 py-5 flex" :style="mainStyle">
-      <div class="max-w-5xl overflow-scroll no-scrollbar mx-auto"><slot /></div>
+    <main
+      class="main px-24 py-5 flex"
+      :style="mainStyle"
+    >
+      <div class="max-w-5xl w-full overflow-scroll no-scrollbar mx-auto">
+        <slot />
+      </div>
     </main>
     <BaseFooter />
   </div>

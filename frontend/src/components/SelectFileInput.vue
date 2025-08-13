@@ -3,6 +3,7 @@ import BaseButton from "@/components/BaseButton.vue";
 import { ref, inject } from "vue";
 import { uploadImage } from "@/helpers/media.ts";
 import { FormError } from "@/types/FormError.ts";
+import AvatarHolder from "@/components/AvatarHolder.vue";
 
 const props = defineProps({
   name: {
@@ -18,8 +19,14 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  selectedImage: {
+    type: String,
+    required: false,
+    default: "",
+  },
 });
 const emit = defineEmits(["imageSelected"]);
+
 const fileInputRef = ref(null);
 const fileToUpload = ref(null);
 const setError = inject("setError");
@@ -52,7 +59,7 @@ async function uploadFile() {
       const formError = new FormError(["No file selected"]);
       setError?.(formError);
     }
-    return false;
+    return props.selectedImage ?? false;
   }
   try {
     const responseData = await uploadImage(fileToUpload.value);
@@ -86,7 +93,12 @@ defineExpose({
 </script>
 
 <template>
-  <div>
+  <div class="flex flex-col w-full">
+    <AvatarHolder
+      v-if="selectedImage && !fileToUpload"
+      :url="selectedImage"
+      class="max-h-80"
+    />
     <input
       ref="fileInputRef"
       class="hidden"
