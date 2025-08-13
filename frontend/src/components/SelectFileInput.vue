@@ -59,7 +59,7 @@ async function uploadFile() {
       const formError = new FormError(["No file selected"]);
       setError?.(formError);
     }
-    return false;
+    return props.selectedImage ?? false;
   }
   try {
     const responseData = await uploadImage(fileToUpload.value);

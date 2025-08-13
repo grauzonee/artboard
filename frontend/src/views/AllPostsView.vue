@@ -31,12 +31,14 @@ function onAddPostClick() {
 }
 
 async function onPostAdded() {
+  console.log("AllPostsView");
   newPostWidget.value?.toggleWidget();
   await postsListRef.value?.refreshFeed(1);
   await myPostsRef.value?.fetchMyPosts();
 }
 
 function onSelectPost(post) {
+  console.log("onSelectPost");
   activePost.value = post;
   postWidget.value?.toggleWidget();
 }

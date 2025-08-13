@@ -65,6 +65,7 @@ defineExpose({ refreshFeed });
         :post="post"
         :can-edit="canEdit"
         @post-deleted="refreshFeed"
+        @post-updated="refreshFeed"
       />
     </template>
     <div

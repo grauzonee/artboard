@@ -13,6 +13,11 @@ const props = defineProps({
     required: false,
     default: "",
   },
+
+  required: {
+    type: Boolean,
+    default: true,
+  },
 });
 const panelStyles = ref({
   "border-color": "var(--color-light-gray)",
@@ -99,6 +104,7 @@ defineExpose({ uploadFile, validate: () => selectFileRef.value?.validate() });
     :selected-image="selectedImage"
     label="Select file..."
     :name="name"
+    :required="required"
     @image-selected="onImageSelected"
   />
 </template>

@@ -14,9 +14,10 @@ export const inputs = {
         label: "Description",
         type: "textarea"
     },
-    image: {
+    imageUrl: {
         name: "imageUrl",
         label: "Select image",
-        type: "drop"
+        type: "drop",
+        required: true
     },
 }

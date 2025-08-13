@@ -20,7 +20,7 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["postDeleted", "editPost"]);
+const emit = defineEmits(["postDeleted", "postUpdated"]);
 
 function onEditPost() {
   postWidgetRef.value?.toggleWidget();
@@ -38,16 +38,12 @@ async function onConfirmed() {
   emit("postDeleted");
   confirmationRef.value?.toggleWidget();
 }
-
-function onPostUpdated() {
-  console.log("added");
-}
 </script>
 <template>
   <NewPostWidget
     ref="postWidgetRef"
     :post="post"
-    @form-submitted="onPostUpdated"
+    @form-submitted="$emit('postUpdated')"
   />
   <ConfirmationWidget
     ref="confirmationRef"
@@ -74,12 +70,12 @@ function onPostUpdated() {
         <font-awesome-icon
           class="text-gray-500 hover:text-red-500 cursor-pointer text-xs"
           icon="trash"
-          @click="openConfirmationWidget"
+          @click.stop="openConfirmationWidget"
         />
         <font-awesome-icon
           class="text-gray-500 hover:text-emerald-500 cursor-pointer text-xs"
           icon="pencil"
-          @click="onEditPost"
+          @click.stop="onEditPost"
         />
       </div>
     </div>

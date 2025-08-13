@@ -1,5 +1,5 @@
 import { api as axios } from '@/lib/axios'
-import type { CreatePostRequest } from "@/types/requests/CreatePostRequest";
+import type { CreatePostRequest, UpdatePostRequest } from "@/types/requests/CreatePostRequest";
 import { PostFilter } from '@/types/PostFilter';
 
 export async function getPosts(page: number, filters: PostFilter | null) {
@@ -30,6 +30,15 @@ export async function addPost(formData: CreatePostRequest) {
     }
     return null;
 }
+export async function updatePost(postId: string, formData: UpdatePostRequest) {
+    const response = await axios.put('/posts/' + postId, formData);
+    const responseData = response.data;
+    if (response.status === 200) {
+        return responseData;
+    }
+    return null;
+}
+
 export async function deletePost(postId: string) {
     const response = await axios.delete('/posts/' + postId);
     if (response.status === 200) {

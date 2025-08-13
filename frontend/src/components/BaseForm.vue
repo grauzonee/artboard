@@ -3,7 +3,15 @@ import BaseInput from "@/components/BaseInput.vue";
 import SelectFileInput from "@/components/SelectFileInput.vue";
 import FileDragAndDrop from "@/components/FileDragAndDrop.vue";
 import FormMessage from "@/components/FormMessage.vue";
-import { ref, defineProps, nextTick, reactive, watch, provide } from "vue";
+import {
+  ref,
+  onMounted,
+  defineProps,
+  nextTick,
+  reactive,
+  watch,
+  provide,
+} from "vue";
 import { FormError } from "@/types/FormError.ts";
 import { FormInput } from "@/types/FormInput.ts";
 
@@ -28,7 +36,21 @@ const props = defineProps({
   },
 });
 
-const formData = reactive(props.inputsData);
+const formData = reactive({});
+onMounted(() => {
+  if (props.inputsData) {
+    const inputNames = Object.keys(props.inputs);
+    Object.assign(
+      formData,
+      Object.fromEntries(
+        Object.entries(props.inputsData).filter(([key]) =>
+          inputNames.includes(key),
+        ),
+      ),
+    );
+  }
+});
+
 const emit = defineEmits(["imageSelected"]);
 
 const formInputs = ref<InputInstance[]>(props.inputs);
@@ -66,16 +88,13 @@ function validate() {
   const validationErrors = [];
   const invalidFields = [];
   const inputNames = Object.keys(inputRefs);
-  console.log("inputNames", inputNames);
   Object.values(inputRefs).forEach((item, index) => {
-    console.log("item", item);
     const validationError = item.validate();
     if (validationError !== true) {
       validationErrors.push(validationError);
       invalidFields.push(inputNames[index]);
     }
   });
-  console.log("invalidFields", invalidFields);
   if (validationErrors.length > 0) {
     const error = new FormError(validationErrors, invalidFields);
     setError(error);
@@ -161,6 +180,7 @@ defineExpose({
         :selected-image="formData[item.name]"
         :label="item.label"
         :name="item.name"
+        :required="item.required"
         @image-selected="onImageSelected(item.name)"
       />
       <FileDragAndDrop
@@ -172,6 +192,7 @@ defineExpose({
         "
         :selected-image="formData[item.name]"
         :name="item.name"
+        :required="item.required"
       />
       <BaseInput
         v-else
