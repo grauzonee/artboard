@@ -11,9 +11,7 @@ defineProps({
 </script>
 <template>
   <div class="user-avatar">
-    <span
-      class="rounded-full h-full w-full bg-gray-200 block border border-primary-violet overflow-hidden"
-    >
+    <span class="rounded-full h-full w-full bg-gray-200 block overflow-hidden">
       <img :src="url ?? avatar">
     </span>
   </div>

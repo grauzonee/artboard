@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import BaseWidget from "@/components/BaseWidget.vue";
+import CommentsList from "@/components/CommentsList.vue";
 import { ref } from "vue";
 
 const widgetRef = ref(null);
@@ -50,8 +51,6 @@ defineExpose({
         icon="heart"
       />
     </div>
-    <p class="text-xl">
-      COMMENTS COMING SOON
-    </p>
+    <CommentsList />
   </BaseWidget>
 </template>
