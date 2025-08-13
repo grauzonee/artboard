@@ -28,6 +28,8 @@ const props = defineProps({
   },
 });
 
+defineEmits(["onInput"]);
+
 const showInput = ref(false);
 const borderColor = ref("var(--color-inputs-border, brown)");
 const labelColor = ref("black");
@@ -109,7 +111,7 @@ onMounted(() => {
         :type="inputType"
         :placeholder="placeholder"
         :style="inputStyles"
-        @input="onInput"
+        @input="$emit('onInput')"
       >
     </transition>
     <transition
@@ -123,7 +125,7 @@ onMounted(() => {
         :type="inputType"
         :placeholder="placeholder"
         :style="inputStyles"
-        @input="onInput"
+        @input="$emit('onInput')"
       />
     </transition>
   </div>

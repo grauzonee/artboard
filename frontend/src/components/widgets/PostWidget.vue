@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import BaseWidget from "@/components/BaseWidget.vue";
 import CommentsList from "@/components/CommentsList.vue";
+import NewCommentForm from "@/components/NewCommentForm.vue";
 import { ref } from "vue";
 
 const widgetRef = ref(null);
@@ -51,6 +52,9 @@ defineExpose({
         icon="heart"
       />
     </div>
-    <CommentsList class="max-h-64 px-4" />
+    <div class="comments-block px-4 mt-4">
+      <NewCommentForm class="my-3" />
+      <CommentsList class="max-h-64" />
+    </div>
   </BaseWidget>
 </template>
