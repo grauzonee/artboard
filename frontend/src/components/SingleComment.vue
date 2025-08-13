@@ -10,9 +10,15 @@ defineProps({
 });
 </script>
 <template>
-  <ContentPanel v-if="comment" class="p-3 flex flex-col shadow shadow-md gap-3">
+  <ContentPanel
+    v-if="comment"
+    class="p-3 flex flex-col shadow shadow-md gap-3"
+  >
     <div class="flex flex-row justify-start gap-3 items-center">
-      <UserAvatarField class="h-10 w-10" :url="comment.author.imageUrl" />
+      <UserAvatarField
+        class="h-10 w-10"
+        :url="comment.author.imageUrl"
+      />
       <p class="block font-bold">
         {{ comment.author.username }}
       </p>

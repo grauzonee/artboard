@@ -9,6 +9,13 @@ const comments = ref([]);
 onMounted(async () => {
   await setComments();
 });
+defineProps({
+  filter: {
+    required: true,
+    type: Object,
+  },
+});
+
 async function setComments() {
   comments.value = [
     {
@@ -34,10 +41,7 @@ async function fetchComments() {}
 provide("loadMoreCallback", fetchComments);
 </script>
 <template>
-  <ScrollableList
-    ref="baseListRef"
-    class="max-h-64 px-4"
-  >
+  <ScrollableList ref="baseListRef">
     <SingleComment
       v-for="(comment, index) in comments"
       :key="index"

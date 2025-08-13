@@ -51,6 +51,6 @@ defineExpose({
         icon="heart"
       />
     </div>
-    <CommentsList />
+    <CommentsList class="max-h-64 px-4" />
   </BaseWidget>
 </template>
