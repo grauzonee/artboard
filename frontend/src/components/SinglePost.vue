@@ -4,9 +4,10 @@ import SingleMaterial from "@/components/SingleMaterial.vue";
 import ConfirmationWidget from "@/components/widgets/ConfirmationWidget.vue";
 import { ref, inject } from "vue";
 import { deletePost } from "@/helpers/posts.ts";
+import NewPostWidget from "@/components/widgets/NewPostWidget.vue";
 
+const postWidgetRef = ref(null);
 const onSelectPost = inject("onSelectPost");
-const onEditPost = inject("onEditPost");
 const confirmationRef = ref(null);
 const props = defineProps({
   post: {
@@ -20,6 +21,10 @@ const props = defineProps({
 });
 
 const emit = defineEmits(["postDeleted", "editPost"]);
+
+function onEditPost() {
+  postWidgetRef.value?.toggleWidget();
+}
 function openConfirmationWidget() {
   confirmationRef.value?.toggleWidget();
 }
@@ -27,13 +32,23 @@ function openConfirmationWidget() {
 function selectPost(post) {
   onSelectPost?.(post);
 }
+
 async function onConfirmed() {
   await deletePost(props.post.id);
   emit("postDeleted");
   confirmationRef.value?.toggleWidget();
 }
+
+function onPostUpdated() {
+  console.log("added");
+}
 </script>
 <template>
+  <NewPostWidget
+    ref="postWidgetRef"
+    :post="post"
+    @form-submitted="onPostUpdated"
+  />
   <ConfirmationWidget
     ref="confirmationRef"
     label="Are you sure you want to delete this post?"
@@ -64,7 +79,7 @@ async function onConfirmed() {
         <font-awesome-icon
           class="text-gray-500 hover:text-emerald-500 cursor-pointer text-xs"
           icon="pencil"
-          @click="onEditPost?.(post)"
+          @click="onEditPost"
         />
       </div>
     </div>

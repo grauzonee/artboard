@@ -6,7 +6,7 @@ import MaterialsForm from "@/components/MaterialsForm.vue";
 import { inputs } from "@/components/inputs/NewPost.ts";
 import { addPost } from "@/helpers/posts.ts";
 
-const emit = defineEmits(["postAdded"]);
+const emit = defineEmits(["formSubmitted"]);
 const widgetRef = ref(null);
 const formRef = ref(null);
 defineProps({
@@ -17,14 +17,14 @@ defineProps({
   },
 });
 
-async function createPost() {
+async function submitForm() {
   try {
     if (formRef.value?.validate() === false) {
       return;
     }
     const formData = await formRef.value?.getFormData();
     await addPost(formData);
-    emit("postAdded");
+    emit("formSubmitted");
   } catch (error) {
     console.log(error);
   }
@@ -47,8 +47,8 @@ defineExpose({
         :inputs-data="post ?? {}"
       />
       <BaseButton
-        label="Add"
-        @click="createPost"
+        :label="post ? 'Save' : 'Add'"
+        @click="submitForm"
       />
     </div>
   </BaseWidget>

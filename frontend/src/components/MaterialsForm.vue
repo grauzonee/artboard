@@ -8,7 +8,7 @@ const formRef = ref(null);
 
 const props = defineProps({
   inputs: {
-    type: Array<FormInput>,
+    type: Object as PropType<Record<string, FormInput>>,
     required: true,
   },
   inputsClasses: {

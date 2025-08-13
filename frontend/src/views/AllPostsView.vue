@@ -40,10 +40,6 @@ function onSelectPost(post) {
   activePost.value = post;
   postWidget.value?.toggleWidget();
 }
-function onEditPost(post) {
-  activePost.value = post;
-  newPostWidget.value?.toggleWidget();
-}
 
 async function onSearch() {
   await postsListRef.value?.refreshFeed(1);
@@ -53,14 +49,13 @@ function updatePostFilter(key: string, value: string) {
   postFilter.value[key] = value;
 }
 provide("onSelectPost", onSelectPost);
-provide("onEditPost", onEditPost);
 provide("updatePostFilter", updatePostFilter);
 </script>
 <template>
   <NewPostWidget
     ref="newPostWidget"
     :post="activePost"
-    @post-added="onPostAdded"
+    @form-submitted="onPostAdded"
   />
   <PostWidget
     ref="postWidget"

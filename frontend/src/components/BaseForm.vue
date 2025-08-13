@@ -13,7 +13,7 @@ const inputRefs = reactive<Record<string, object>>({});
 
 const props = defineProps({
   inputs: {
-    type: Array<FormInput>,
+    type: Object as PropType<Record<string, FormInput>>,
     required: true,
   },
   inputsData: {
