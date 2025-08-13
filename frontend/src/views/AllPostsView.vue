@@ -77,7 +77,7 @@ provide("updatePostFilter", updatePostFilter);
       />
       <PostsList
         ref="postsListRef"
-        :post-filter="postFilter"
+        :filter="postFilter"
       />
       <MqResponsive
         target="lg+"

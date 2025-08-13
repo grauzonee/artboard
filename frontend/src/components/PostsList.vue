@@ -8,7 +8,7 @@ import { useRoute } from "vue-router";
 import { PostFilter } from "@/types/PostFilter.ts";
 
 const props = defineProps({
-  postFilter: {
+  filter: {
     required: true,
     type: PostFilter,
   },
@@ -35,7 +35,7 @@ async function setPosts() {
 
 async function fetchPosts(page: int | null) {
   try {
-    const newPostsData = await getPosts(page, props.postFilter as PostFilter);
+    const newPostsData = await getPosts(page, props.filter as PostFilter);
     if (newPostsData.docs && newPostsData.docs.length > 0) {
       posts.value = [...posts.value, ...newPostsData.docs];
       return newPostsData.hasNext;
@@ -49,7 +49,7 @@ async function fetchPosts(page: int | null) {
 async function refreshFeed(page: number | null) {
   posts.value = [];
   if (page != null) baseListRef.value?.setPage(page);
-  await fetchPosts(baseListRef.value?.getPage(), props.postFilter);
+  await fetchPosts(baseListRef.value?.getPage(), props.filter);
 }
 
 const posts = ref([]);

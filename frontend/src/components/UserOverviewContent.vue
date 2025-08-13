@@ -2,11 +2,12 @@
 import { ref, onMounted } from "vue";
 import BarMenu from "@/components/BarMenu.vue";
 import PostsList from "@/components/PostsList.vue";
+import CommentsList from "@/components/CommentsList.vue";
 import { PostFilter as PostFilterData } from "@/types/PostFilter.ts";
 import { useRoute } from "vue-router";
 import { getCurrentUserId } from "@/helpers/user.ts";
 
-const postFilter = ref(null);
+const filters = ref({ posts: {}, comments: {} });
 
 onMounted(async () => {
   const route = useRoute();
@@ -14,7 +15,11 @@ onMounted(async () => {
   if (userId === "mine") {
     userId = getCurrentUserId();
   }
-  postFilter.value = new PostFilterData({
+  filters.value.posts = new PostFilterData({
+    sortByDesc: "createdAt",
+    author: userId,
+  });
+  filters.value.comments = new PostFilterData({
     sortByDesc: "createdAt",
     author: userId,
   });
@@ -40,8 +45,12 @@ function onBarMenuItemSelected(index) {
       @item-selected="onBarMenuItemSelected"
     />
     <PostsList
-      v-if="barMenuItems.posts.selected && postFilter"
-      :post-filter="postFilter"
+      v-if="barMenuItems.posts.selected && filters.posts"
+      :filter="filters.posts"
+    />
+    <CommentsList
+      v-if="barMenuItems.comments.selected && filters.comments"
+      :filter="filters.comments"
     />
   </div>
 </template>
