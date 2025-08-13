@@ -158,6 +158,7 @@ defineExpose({
             if (el) inputRefs[item.name] = el;
           }
         "
+        :selected-image="formData[item.name]"
         :label="item.label"
         :name="item.name"
         @image-selected="onImageSelected(item.name)"
@@ -169,6 +170,7 @@ defineExpose({
             if (el) inputRefs[item.name] = el;
           }
         "
+        :selected-image="formData[item.name]"
         :name="item.name"
       />
       <BaseInput

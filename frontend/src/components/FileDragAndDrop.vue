@@ -1,11 +1,17 @@
 <script setup lang="ts">
 import ContentPanel from "@/components/ContentPanel.vue";
 import SelectFileInput from "@/components/SelectFileInput.vue";
-import { ref } from "vue";
-defineProps({
+import { ref, onMounted } from "vue";
+
+const props = defineProps({
   name: {
     type: String,
     default: "drag-and-drop",
+  },
+  selectedImage: {
+    type: String,
+    required: false,
+    default: "",
   },
 });
 const panelStyles = ref({
@@ -14,6 +20,13 @@ const panelStyles = ref({
 });
 
 const selectFileRef = ref(null);
+const showPanel = ref(true);
+
+onMounted(() => {
+  if (props) {
+    showPanel.value = false;
+  }
+});
 
 function resetPanelStyles() {
   panelStyles.value = {
@@ -46,10 +59,16 @@ async function uploadFile(): Promise<{ name: string; path: string } | null> {
   }
 }
 
+function onImageSelected() {
+  showPanel.value = true;
+}
 defineExpose({ uploadFile, validate: () => selectFileRef.value?.validate() });
 </script>
 <template>
-  <transition name="dragAndDrop">
+  <transition
+    v-if="showPanel"
+    name="dragAndDrop"
+  >
     <ContentPanel
       class="border-dashed p-8 text-center"
       :style="panelStyles"
@@ -72,13 +91,16 @@ defineExpose({ uploadFile, validate: () => selectFileRef.value?.validate() });
       >
         {{ selectFileRef?.getFileToUpload().name.slice(0, 5) }}... file selected
       </p>
-      <SelectFileInput
-        ref="selectFileRef"
-        label="Select file..."
-        :name="name"
-      />
     </ContentPanel>
   </transition>
+
+  <SelectFileInput
+    ref="selectFileRef"
+    :selected-image="selectedImage"
+    label="Select file..."
+    :name="name"
+    @image-selected="onImageSelected"
+  />
 </template>
 <style scoped>
 .dragAndDrop-enter-active {
