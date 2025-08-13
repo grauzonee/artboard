@@ -62,8 +62,14 @@ provide("updatePostFilter", updatePostFilter);
     :post="activePost"
     @post-added="onPostAdded"
   />
-  <PostWidget ref="postWidget" :post="activePost" />
-  <div v-if="postFilter" class="posts-page h-full">
+  <PostWidget
+    ref="postWidget"
+    :post="activePost"
+  />
+  <div
+    v-if="postFilter"
+    class="posts-page h-full"
+  >
     <div
       class="flex flex-col lg:flex-row lg:flex-row gap-6 h-[calc(100%-0.8rem)]"
     >
@@ -72,8 +78,14 @@ provide("updatePostFilter", updatePostFilter);
         class="w-full lg:w-1/5 p-4 bg-gray-100 text-lx"
         @search="onSearch"
       />
-      <PostsList ref="postsListRef" :post-filter="postFilter" />
-      <MqResponsive target="lg+" class="w-1/2 lg:w-1/4 order-1 lg:order-none">
+      <PostsList
+        ref="postsListRef"
+        :post-filter="postFilter"
+      />
+      <MqResponsive
+        target="lg+"
+        class="w-1/2 lg:w-1/4 order-1 lg:order-none"
+      >
         <MyPosts
           ref="myPostsRef"
           @add-post-click="onAddPostClick"
