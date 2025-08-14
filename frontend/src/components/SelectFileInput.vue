@@ -104,7 +104,10 @@ defineExpose({
       class="hidden"
       type="file"
       @change="onFileChange"
+    >
+    <BaseButton
+      :label="label"
+      @click="triggerFileSelect"
     />
-    <BaseButton :label="label" @click="triggerFileSelect" />
   </div>
 </template>

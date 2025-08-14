@@ -1,15 +1,19 @@
 import { api as axios } from '@/lib/axios'
 import type { CreatePostRequest, UpdatePostRequest } from "@/types/requests/CreatePostRequest";
-import { PostFilter } from '@/types/PostFilter';
+import { type BaseFilterData, type AuthorFilterData, BaseFilter } from '@/types/BaseFilter';
 
-export async function getPosts(page: number, filters: PostFilter | null) {
+export type PostFilterData = BaseFilterData & AuthorFilterData & {
+    materials: string[] | null;
+}
+
+export async function getPosts(page: number, filters: PostFilterData | null) {
     const url = '/posts/all';
     const urlParams = new URLSearchParams({
         page: page.toString()
     });
 
     if (filters) {
-        const filterParams = filters.toURLSearchParams();
+        const filterParams = new BaseFilter<PostFilterData>(filters).toURLSearchParams();
         filterParams.forEach((value, key) => {
             urlParams.append(key, value);
         });

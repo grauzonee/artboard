@@ -162,8 +162,14 @@ defineExpose({
   <div
     class="form rounded-md bg-emerald-1 w-100 bg-white/10 backdrop-blur-md p-3 flex flex-col gap-5"
   >
-    <FormMessage ref="messageRef" type="error" />
-    <template v-for="[key, item] in Object.entries(formInputs)" :key="key">
+    <FormMessage
+      ref="messageRef"
+      type="error"
+    />
+    <template
+      v-for="[key, item] in Object.entries(formInputs)"
+      :key="key"
+    >
       <SelectFileInput
         v-if="item.type === 'file'"
         :ref="
