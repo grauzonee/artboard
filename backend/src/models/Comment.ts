@@ -1,5 +1,7 @@
 import { Schema, Types, Document, Model, model } from 'mongoose';
 import mongoose from 'mongoose';
+import { Paginable } from "types/pagination";
+import { mongoosePagination } from "../plugins/paginate";
 
 export interface IComment extends Document<string> {
     content: string,
@@ -7,7 +9,7 @@ export interface IComment extends Document<string> {
     post: Types.ObjectId
 }
 
-export interface ICommentModel extends Model<IComment> {
+export interface ICommentModel extends Model<IComment>, Paginable<IComment> {
     getSortableFields(): string[];
 }
 
@@ -28,6 +30,7 @@ const commentSchema = new Schema<IComment>({
     },
 }, { timestamps: true });
 
+commentSchema.plugin(mongoosePagination);
 commentSchema.set('toJSON', {
     transform: function(doc, ret) {
         ret.id = ret._id;

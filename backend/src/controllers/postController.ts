@@ -5,8 +5,6 @@ import { logger } from '@helper/loggerHelper';
 import { PaginationOptions } from 'types/pagination';
 
 export async function getPosts(req: Request, res: Response) {
-
-    //const posts = await Post.find(req.dbFilter ?? {}).sort(req.dbSort ?? {}).populate('author', 'username');
     const { page = 1, limit = 1 } = req.query || {};
     const options: PaginationOptions = {
         page: Number(page),
