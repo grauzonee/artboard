@@ -1,8 +1,16 @@
 import { Comment } from '../models/Comment';
 import { Request, Response } from 'express';
+import { PaginationOptions } from 'types/pagination';
 
 export const getComments = async (req: Request, res: Response) => {
-    const comments = await Comment.find(req.dbFilter ?? {}).sort(req.dbSort ?? {}).populate('author', 'username');
+    const { page = 1, limit = 1 } = req.query || {};
+    const options: PaginationOptions = {
+        page: Number(page),
+        limit: Number(limit),
+        sort: req.dbSort ?? {},
+        populate: "author"
+    }
+    const comments = await Comment.paginate(req.dbFilter ?? {}, options)
     return res.status(200).json({ success: true, data: comments });
 }
 export const getCommentById = async (req: Request, res: Response) => {

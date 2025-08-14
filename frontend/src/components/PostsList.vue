@@ -2,17 +2,12 @@
 import ScrollableList from "@/components/ScrollableList.vue";
 import SinglePost from "@/components/SinglePost.vue";
 import { ref, onMounted, provide } from "vue";
+import type { PostFilterData } from "@/helpers/posts.ts";
 import { getPosts } from "@/helpers/posts.ts";
 import { getCurrentUserId } from "@/helpers/user.ts";
 import { useRoute } from "vue-router";
-import { PostFilter } from "@/types/PostFilter.ts";
 
-const props = defineProps({
-  filter: {
-    required: true,
-    type: PostFilter,
-  },
-});
+const props = defineProps<{ filter: PostFilterData }>();
 const canEdit = ref(false);
 const baseListRef = ref(null);
 
@@ -35,7 +30,7 @@ async function setPosts() {
 
 async function fetchPosts(page: int | null) {
   try {
-    const newPostsData = await getPosts(page, props.filter as PostFilter);
+    const newPostsData = await getPosts(page, props.filter);
     if (newPostsData.docs && newPostsData.docs.length > 0) {
       posts.value = [...posts.value, ...newPostsData.docs];
       return newPostsData.hasNext;

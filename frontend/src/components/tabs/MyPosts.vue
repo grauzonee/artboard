@@ -1,28 +1,29 @@
 <script setup lang="ts">
 import ContentPanel from "@/components/ContentPanel.vue";
 import { ref, onMounted } from "vue";
+import type { PostFilterData } from "@/helpers/posts.ts";
 import { getPosts } from "@/helpers/posts.ts";
 import { getUser } from "@/helpers/user.ts";
-import { PostFilter } from "@/types/PostFilter.ts";
 
 const posts = ref([]);
 const user = ref(null);
-let postFilter = null;
+let postFilter = ref<PostFilterData | null>(null);
 
 defineEmits(["postSelected", "addPostClick"]);
 
 onMounted(async () => {
   user.value = await getUser();
-  postFilter = new PostFilter({
+  postFilter.value = {
     author: user.value.id,
     sortByDesc: "createdAt",
-  });
+    limit: "10",
+  };
   await fetchMyPosts();
 });
 
 async function fetchMyPosts() {
   try {
-    const myPostsData = await getPosts(1, postFilter);
+    const myPostsData = await getPosts(1, postFilter.value);
     if (myPostsData.docs && myPostsData.docs.length > 0) {
       posts.value = myPostsData.docs;
     }

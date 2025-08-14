@@ -2,10 +2,11 @@
 import BaseWidget from "@/components/BaseWidget.vue";
 import CommentsList from "@/components/CommentsList.vue";
 import NewCommentForm from "@/components/NewCommentForm.vue";
-import { ref } from "vue";
+import { ref, watch } from "vue";
+import type { CommentFilterData } from "@/helpers/comments.ts";
 
 const widgetRef = ref(null);
-defineProps({
+const props = defineProps({
   post: {
     type: Object,
     default: null,
@@ -15,6 +16,21 @@ defineProps({
     default: false,
   },
 });
+const commentsFilter = ref<CommentFilterData | null>();
+watch(
+  () => props.post,
+  (newPost) => {
+    if (newPost) {
+      commentsFilter.value = {
+        limit: "10",
+        sortByDesc: "createdAt",
+        post: newPost.id,
+      };
+    } else {
+      commentsFilter.value = null;
+    }
+  },
+);
 defineExpose({
   toggleWidget: () => widgetRef.value?.toggleWidget(),
 });
@@ -54,7 +70,12 @@ defineExpose({
     </div>
     <div class="comments-block px-4 mt-4">
       <NewCommentForm class="my-3" />
-      <CommentsList class="max-h-64" />
+      <CommentsList
+        v-if="commentsFilter"
+        class="max-h-64"
+        :filter="commentsFilter"
+        :post-id="post.id"
+      />
     </div>
   </BaseWidget>
 </template>

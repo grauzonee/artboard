@@ -3,11 +3,11 @@ import { ref, onMounted } from "vue";
 import BarMenu from "@/components/BarMenu.vue";
 import PostsList from "@/components/PostsList.vue";
 import CommentsList from "@/components/CommentsList.vue";
-import { PostFilter as PostFilterData } from "@/types/PostFilter.ts";
 import { useRoute } from "vue-router";
 import { getCurrentUserId } from "@/helpers/user.ts";
+import type { PostFilterData } from "@/helpers/user.ts";
 
-const filters = ref({ posts: {}, comments: {} });
+const filters = ref<Array<PostFilterData>>({ posts: {}, comments: {} });
 
 onMounted(async () => {
   const route = useRoute();
@@ -15,14 +15,16 @@ onMounted(async () => {
   if (userId === "mine") {
     userId = getCurrentUserId();
   }
-  filters.value.posts = new PostFilterData({
+  filters.value.posts = {
     sortByDesc: "createdAt",
     author: userId,
-  });
-  filters.value.comments = new PostFilterData({
+    limit: "10",
+  };
+  filters.value.comments = {
     sortByDesc: "createdAt",
     author: userId,
-  });
+    limit: "10",
+  };
 });
 
 const barMenuItems = ref({

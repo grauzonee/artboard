@@ -5,12 +5,14 @@ import { schemaValidation } from '../middleware/schemaValidation';
 import { filterMiddleware } from '../middleware/filterMiddleware';
 import { CreateSchema, UpdateSchema } from '../schemas/commentSchemas';
 import { commentFilter } from '../filters/commentFilter';
+import { sortMiddleware } from '../middleware/sortMiddleware';
+import { Comment } from '@models/Comment';
 
 export const router = Router();
 
 router.get(
     '/all',
-    [authMiddleware, filterMiddleware(commentFilter)],
+    [authMiddleware, filterMiddleware(commentFilter), sortMiddleware(Comment)],
     async (req: Request, res: Response) => {
         await getComments(req, res)
     }

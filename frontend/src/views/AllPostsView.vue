@@ -3,9 +3,9 @@ import MyPosts from "@/components/tabs/MyPosts.vue";
 import NewPostWidget from "@/components/widgets/NewPostWidget.vue";
 import PostWidget from "@/components/widgets/PostWidget.vue";
 import PostFilter from "@/components/tabs/PostFilter.vue";
-import { PostFilter as PostFilterData } from "@/types/PostFilter.ts";
 import PostsList from "@/components/PostsList.vue";
 import { inject, onMounted, ref, provide } from "vue";
+import type { PostFilterData } from "@/helpers/posts.ts";
 
 const setMainStyle = inject("setMainStyle");
 const newPostWidget = ref(null);
@@ -15,15 +15,16 @@ const postsListRef = ref(null);
 const myPostsRef = ref(null);
 const activePost = ref(null);
 
-const postFilter = ref(null);
+const postFilter = ref<PostFilterData | null>(null);
 
 onMounted(async () => {
   setMainStyle?.({
     overflow: "hidden",
   });
-  postFilter.value = new PostFilterData({
+  postFilter.value = {
     sortByDesc: "createdAt",
-  });
+    limit: "10",
+  };
 });
 
 function onAddPostClick() {
@@ -31,14 +32,12 @@ function onAddPostClick() {
 }
 
 async function onPostAdded() {
-  console.log("AllPostsView");
   newPostWidget.value?.toggleWidget();
   await postsListRef.value?.refreshFeed(1);
   await myPostsRef.value?.fetchMyPosts();
 }
 
 function onSelectPost(post) {
-  console.log("onSelectPost");
   activePost.value = post;
   postWidget.value?.toggleWidget();
 }
