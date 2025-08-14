@@ -9,6 +9,7 @@ import NewPostWidget from "@/components/widgets/NewPostWidget.vue";
 const postWidgetRef = ref(null);
 const onSelectPost = inject("onSelectPost");
 const confirmationRef = ref(null);
+
 const props = defineProps({
   post: {
     type: Object,
