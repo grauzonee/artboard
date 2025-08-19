@@ -6,6 +6,7 @@ import { ref, watch } from "vue";
 import type { CommentFilterData } from "@/helpers/comments.ts";
 
 const widgetRef = ref(null);
+const commentsListRef = ref(null);
 const props = defineProps({
   post: {
     type: Object,
@@ -32,7 +33,9 @@ watch(
   },
 );
 
-function onCommentAdded() {}
+async function onCommentAdded() {
+  await commentsListRef.value?.refreshFeed(1);
+}
 
 defineExpose({
   toggleWidget: () => widgetRef.value?.toggleWidget(),
@@ -79,6 +82,7 @@ defineExpose({
       />
       <CommentsList
         v-if="commentsFilter"
+        ref="commentsListRef"
         class="max-h-64"
         :filter="commentsFilter"
       />

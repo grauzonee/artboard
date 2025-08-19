@@ -2,29 +2,20 @@
 import ScrollableList from "@/components/ScrollableList.vue";
 import SingleComment from "@/components/SingleComment.vue";
 import { getComments } from "@/helpers/comments.ts";
-import { ref, onMounted, provide } from "vue";
+import { ref, provide } from "vue";
 import type { CommentFilterData } from "@/helpers/comments.ts";
 
 const baseListRef = ref(null);
-const comments = ref([]);
 
 const props = defineProps<{
   filter: CommentFilterData;
 }>();
 
-onMounted(async () => {
-  await fetchComments();
-});
-
-async function fetchComments() {
+async function fetchComments(page: number | null) {
   try {
-    const newCommentsData = await getComments(
-      baseListRef.value?.getPage(),
-      props.filter,
-    );
-    if (newCommentsData.docs && newCommentsData.docs.length > 0) {
-      comments.value = [...comments.value, ...newCommentsData.docs];
-      return newCommentsData.hasNext;
+    const newCommentsData = await getComments(page, props.filter);
+    if (newCommentsData.docs) {
+      return newCommentsData;
     }
   } catch (error) {
     console.log(error);
@@ -33,13 +24,18 @@ async function fetchComments() {
 }
 
 provide("loadMoreCallback", fetchComments);
+defineExpose({
+  refreshFeed: async (newPage) => await baseListRef.value?.refreshFeed(newPage),
+});
 </script>
 <template>
   <ScrollableList ref="baseListRef">
-    <SingleComment
-      v-for="(comment, index) in comments"
-      :key="index"
-      :comment="comment"
-    />
+    <template v-if="baseListRef && baseListRef.getItems().length > 0">
+      <SingleComment
+        v-for="(comment, index) in baseListRef.getItems()"
+        :key="index"
+        :comment="comment"
+      />
+    </template>
   </ScrollableList>
 </template>

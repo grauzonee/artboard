@@ -8,7 +8,7 @@ import { getPosts } from "@/helpers/posts.ts";
 const props = defineProps<{ filter: PostFilterData }>();
 const baseListRef = ref(null);
 
-async function fetchPosts(page: int | null) {
+async function fetchPosts(page: number | null) {
   try {
     const newPostsData = await getPosts(page, props.filter);
     if (newPostsData.docs && newPostsData.docs.length > 0) {
