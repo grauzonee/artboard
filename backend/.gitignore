@@ -4,3 +4,4 @@ uploads/
 dist/
 *.log
 coverage/
+error.log
