@@ -5,5 +5,6 @@ export const Post = {
     findById: jest.fn(),
     matchPassword: jest.fn(),
     findOneAndDelete: jest.fn(),
-    paginate: jest.fn()
+    paginate: jest.fn(),
+    findByIdAndUpdate: jest.fn()
 }

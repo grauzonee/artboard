@@ -17,7 +17,6 @@ export async function getPosts(req: Request, res: Response) {
 }
 
 export async function getById(req: Request, res: Response) {
-
     const id = req.params.id;
     const post = await Post.findById({ _id: id, author: req.user?._id });
     if (!post) {

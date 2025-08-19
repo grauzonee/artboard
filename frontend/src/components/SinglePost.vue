@@ -2,27 +2,39 @@
 import avatar from "@/assets/images/avatar-placeholder.png";
 import SingleMaterial from "@/components/SingleMaterial.vue";
 import ConfirmationWidget from "@/components/widgets/ConfirmationWidget.vue";
-import { ref, inject } from "vue";
+import { ref, inject, onMounted } from "vue";
 import { deletePost } from "@/helpers/posts.ts";
 import NewPostWidget from "@/components/widgets/NewPostWidget.vue";
+import { getCurrentUserId } from "@/helpers/user.ts";
+import { toggleLike } from "@/helpers/likes.ts";
 
 const postWidgetRef = ref(null);
 const onSelectPost = inject("onSelectPost");
 const confirmationRef = ref(null);
+const canEdit = ref(false);
+const hasLiked = ref(false);
 
 const props = defineProps({
   post: {
     type: Object,
     default: null,
   },
-  canEdit: {
-    type: Boolean,
-    default: false,
-  },
 });
 
 const emit = defineEmits(["postDeleted", "postUpdated"]);
 
+onMounted(() => {
+  setCanEdit();
+  setHasLiked();
+});
+
+function setCanEdit() {
+  canEdit.value = props.post.author.id === getCurrentUserId();
+}
+
+function setHasLiked() {
+  hasLiked.value = props.post.likedBy.includes(getCurrentUserId());
+}
 function onEditPost() {
   postWidgetRef.value?.toggleWidget();
 }
@@ -38,6 +50,11 @@ async function onConfirmed() {
   await deletePost(props.post.id);
   emit("postDeleted");
   confirmationRef.value?.toggleWidget();
+}
+
+async function onLikeClick() {
+  const res = await toggleLike(props.post.id);
+  hasLiked.value = res.liked;
 }
 </script>
 <template>
@@ -67,7 +84,10 @@ async function onConfirmed() {
           post.author.username
         }}</span>
       </div>
-      <div class="w-1/5 mb-3 flex flex-row justify-end gap-2 items-end">
+      <div
+        v-if="canEdit"
+        class="w-1/5 mb-3 flex flex-row justify-end gap-2 items-end"
+      >
         <font-awesome-icon
           class="text-gray-500 hover:text-red-500 cursor-pointer text-xs"
           icon="trash"
@@ -106,8 +126,12 @@ async function onConfirmed() {
         />
       </div>
       <font-awesome-icon
-        class="text-gray-500 hover:text-red-500 cursor-pointer text-xl"
+        :class="[
+          'cursor-pointer text-xl',
+          hasLiked ? 'text-red-500' : 'text-gray-500 hover:text-red-500',
+        ]"
         icon="heart"
+        @click="onLikeClick"
       />
     </div>
   </div>

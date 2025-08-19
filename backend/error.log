@@ -38,3 +38,4 @@
 {"level":"error","message":"ENOENT: no such file or directory, unlink 'http://localhost:3000/http://localhost:3000/uploads/68600b2321b078541b943d5d/1755079143437-5409131548759946699.jpg'","service":"user-service"}
 {"level":"error","message":"ENOENT: no such file or directory, unlink '/http://localhost:3000/http://localhost:3000/uploads/68600b2321b078541b943d5d/1755079143437-5409131548759946699.jpg'","service":"user-service"}
 {"level":"error","message":"ENOENT: no such file or directory, unlink '/uploads/68600b2321b078541b943d5d/1755079403638-5409131548759946699.jpg'","service":"user-service"}
+{"level":"error","message":"ENOENT: no such file or directory, unlink 'http://localhost:3000/uploads/68600b2321b078541b943d5d/1754819788571-5976406487003679307.jpg'","service":"user-service"}

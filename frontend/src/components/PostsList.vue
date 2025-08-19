@@ -1,39 +1,18 @@
 <script setup lang="ts">
 import ScrollableList from "@/components/ScrollableList.vue";
 import SinglePost from "@/components/SinglePost.vue";
-import { ref, onMounted, provide } from "vue";
+import { ref, provide } from "vue";
 import type { PostFilterData } from "@/helpers/posts.ts";
 import { getPosts } from "@/helpers/posts.ts";
-import { getCurrentUserId } from "@/helpers/user.ts";
-import { useRoute } from "vue-router";
 
 const props = defineProps<{ filter: PostFilterData }>();
-const canEdit = ref(false);
 const baseListRef = ref(null);
 
-let userId = null;
-
-onMounted(async () => {
-  await setPosts();
-});
-
-async function setPosts() {
-  const route = useRoute();
-  userId = route.params.id;
-  canEdit.value = getCurrentUserId() === userId;
-  if (userId === "mine") {
-    userId = getCurrentUserId();
-    canEdit.value = true;
-  }
-  await fetchPosts(1);
-}
-
-async function fetchPosts(page: int | null) {
+async function fetchPosts(page: number | null) {
   try {
     const newPostsData = await getPosts(page, props.filter);
     if (newPostsData.docs && newPostsData.docs.length > 0) {
-      posts.value = [...posts.value, ...newPostsData.docs];
-      return newPostsData.hasNext;
+      return newPostsData;
     }
   } catch (error) {
     console.log(error);
@@ -41,26 +20,28 @@ async function fetchPosts(page: int | null) {
   }
 }
 
-async function refreshFeed(page: number | null) {
-  posts.value = [];
-  if (page != null) baseListRef.value?.setPage(page);
-  await fetchPosts(baseListRef.value?.getPage(), props.filter);
-}
-
-const posts = ref([]);
 provide("loadMoreCallback", fetchPosts);
-defineExpose({ refreshFeed });
+defineExpose({
+  refreshFeed: async (newPage) => await baseListRef.value?.refreshFeed(newPage),
+});
 </script>
 <template>
   <ScrollableList ref="baseListRef">
-    <template v-if="posts.length > 0">
+    <template v-if="baseListRef && baseListRef.getItems().length > 0">
       <SinglePost
-        v-for="(post, index) in posts"
+        v-for="(post, index) in baseListRef.getItems()"
         :key="index"
         :post="post"
-        :can-edit="canEdit"
-        @post-deleted="refreshFeed"
-        @post-updated="refreshFeed"
+        @post-deleted="
+          () => {
+            baseListRef.refreshFeed();
+          }
+        "
+        @post-updated="
+          () => {
+            baseListRef.refreshFeed();
+          }
+        "
       />
     </template>
     <div

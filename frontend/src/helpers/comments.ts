@@ -1,6 +1,7 @@
 import { api as axios } from '@/lib/axios'
 import type { BaseFilterData, AuthorFilterData } from '@/types/BaseFilter';
 import { BaseFilter } from '@/types/BaseFilter';
+import type { CreateCommentRequest } from '@/types/requests/CreateCommentRequest';
 
 export type CommentFilterData = BaseFilterData & AuthorFilterData;
 
@@ -21,6 +22,15 @@ export async function getComments(page: number, filters: CommentFilterData | nul
     const responseData = response.data;
     if (response.status === 200) {
         return responseData.data;
+    }
+    return null;
+}
+
+export async function addComment(formData: CreateCommentRequest) {
+    const response = await axios.post('/comments/create', formData);
+    const responseData = response.data;
+    if (response.status === 200) {
+        return responseData;
     }
     return null;
 }

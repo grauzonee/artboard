@@ -1,11 +1,15 @@
 <script setup lang="ts">
-import { ref, inject } from "vue";
+import { ref, inject, onMounted } from "vue";
 
 const scrolledToEnd = ref(false);
 const hasNext = ref(true);
 const page = ref(1);
+const items = ref([]);
 const loadMoreCallback = inject("loadMoreCallback");
 
+onMounted(async () => {
+  await loadMore();
+});
 function handleScroll(event) {
   const { scrollTop, clientHeight, scrollHeight } = event.target;
 
@@ -14,26 +18,27 @@ function handleScroll(event) {
   }
 }
 
-async function onLoadMoreClick() {
-  page.value++;
-  const hasNext = await loadMoreCallback?.(page.value);
-  setHasNext(hasNext);
+async function loadMore() {
+  const newItemsData = await loadMoreCallback?.(page.value);
+  hasNext.value = newItemsData.hasNext;
+  items.value = [...items.value, ...newItemsData.docs];
   scrolledToEnd.value = false;
 }
-
-function setHasNext(newValue: bool) {
-  hasNext.value = newValue;
+async function onLoadMoreClick() {
+  page.value++;
+  await loadMore();
 }
 
-function setPage(newPage: number) {
-  console.log("newPage", newPage);
-  page.value = newPage ?? 1;
+async function refreshFeed(newPage: number | null) {
+  items.value = [];
+  if (newPage != null) page.value = newPage;
+  await loadMore();
 }
 
-function getPage() {
-  return page.value;
+function getItems() {
+  return items.value;
 }
-defineExpose({ setHasNext, getPage, setPage });
+defineExpose({ refreshFeed, getItems });
 </script>
 <template>
   <div
