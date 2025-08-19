@@ -25,7 +25,7 @@ export const TimeFilter: FilterList = {
     ]
 }
 
-export type FilterValue = Record<string, string | mongoose.Types.ObjectId>
+export type FilterValue = Record<string, string | mongoose.Types.ObjectId | mongoose.Types.ObjectId[]>
 
 export const filterMiddleware = (filterList: FilterList) => {
     return (req: Request, res: Response, next: NextFunction) => {

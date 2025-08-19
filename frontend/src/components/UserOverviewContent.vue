@@ -3,6 +3,7 @@ import { ref, onMounted } from "vue";
 import BarMenu from "@/components/BarMenu.vue";
 import PostsList from "@/components/PostsList.vue";
 import CommentsList from "@/components/CommentsList.vue";
+import LikesList from "@/components/LikesList.vue";
 import { useRoute } from "vue-router";
 import { getCurrentUserId } from "@/helpers/user.ts";
 import type { PostFilterData } from "@/helpers/user.ts";
@@ -23,6 +24,10 @@ onMounted(async () => {
   filters.value.comments = {
     sortByDesc: "createdAt",
     author: userId,
+    limit: "10",
+  };
+  filters.value.likes = {
+    sortByDesc: "createdAt",
     limit: "10",
   };
 });
@@ -53,6 +58,10 @@ function onBarMenuItemSelected(index) {
     <CommentsList
       v-if="barMenuItems.comments.selected && filters.comments"
       :filter="filters.comments"
+    />
+    <LikesList
+      v-if="barMenuItems.likes.selected && filters.likes"
+      :filter="filters.likes"
     />
   </div>
 </template>
