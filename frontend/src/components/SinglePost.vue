@@ -11,6 +11,7 @@ const postWidgetRef = ref(null);
 const onSelectPost = inject("onSelectPost");
 const confirmationRef = ref(null);
 const canEdit = ref(false);
+const hasLiked = ref(false);
 
 const props = defineProps({
   post: {
@@ -23,11 +24,15 @@ const emit = defineEmits(["postDeleted", "postUpdated"]);
 
 onMounted(() => {
   setCanEdit();
+  setHasLiked();
 });
 
 function setCanEdit() {
-  console.log(props.post.author.id, getCurrentUserId());
   canEdit.value = props.post.author.id === getCurrentUserId();
+}
+
+function setHasLiked() {
+  hasLiked.value = props.post.likedBy.includes(getCurrentUserId());
 }
 function onEditPost() {
   postWidgetRef.value?.toggleWidget();
@@ -115,7 +120,10 @@ async function onConfirmed() {
         />
       </div>
       <font-awesome-icon
-        class="text-gray-500 hover:text-red-500 cursor-pointer text-xl"
+        :class="[
+          'cursor-pointer text-xl',
+          hasLiked ? 'text-red-500' : 'text-gray-500 hover:text-red-500',
+        ]"
         icon="heart"
       />
     </div>
