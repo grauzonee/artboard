@@ -6,6 +6,7 @@ import { ref, inject, onMounted } from "vue";
 import { deletePost } from "@/helpers/posts.ts";
 import NewPostWidget from "@/components/widgets/NewPostWidget.vue";
 import { getCurrentUserId } from "@/helpers/user.ts";
+import { toggleLike } from "@/helpers/likes.ts";
 
 const postWidgetRef = ref(null);
 const onSelectPost = inject("onSelectPost");
@@ -49,6 +50,11 @@ async function onConfirmed() {
   await deletePost(props.post.id);
   emit("postDeleted");
   confirmationRef.value?.toggleWidget();
+}
+
+async function onLikeClick() {
+  const res = await toggleLike(props.post.id);
+  hasLiked.value = res.liked;
 }
 </script>
 <template>
@@ -125,6 +131,7 @@ async function onConfirmed() {
           hasLiked ? 'text-red-500' : 'text-gray-500 hover:text-red-500',
         ]"
         icon="heart"
+        @click="onLikeClick"
       />
     </div>
   </div>
