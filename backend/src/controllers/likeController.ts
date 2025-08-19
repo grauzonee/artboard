@@ -13,11 +13,11 @@ export async function like(req: Request, res: Response) {
 
     if (existingLike) {
         await existingLike.deleteOne();
-        await Post.findByIdAndUpdate(postId, { $inc: { likesCount: -1 } });
+        await Post.findByIdAndUpdate(postId, { $pull: { likedBy: userId } });
         return res.json({ success: true, liked: false });
     } else {
         await Like.create({ userId, postId });
-        await Post.findByIdAndUpdate(postId, { $inc: { likesCount: 1 } });
+        await Post.findByIdAndUpdate(postId, { $addToSet: { likedBy: userId } });
         return res.json({ success: true, liked: true });
     }
 }

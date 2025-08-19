@@ -10,7 +10,7 @@ export interface IPost extends Document<string> {
     imageUrl: string,
     author: Types.ObjectId,
     materials: string[],
-    likesCount: number,
+    likedBy: Types.ObjectId[],
     createdAt?: Date,
     updatedAt?: Date
 }
@@ -39,10 +39,10 @@ const postSchema = new Schema<IPost>({
     materials: [{
         type: String
     }],
-    likesCount: {
-        type: Number,
+    likedBy: [{
+        type: mongoose.SchemaTypes.ObjectId,
         default: 0
-    }
+    }]
 }, { timestamps: true });
 
 postSchema.plugin(mongoosePagination);

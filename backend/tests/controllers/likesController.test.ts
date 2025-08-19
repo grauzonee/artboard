@@ -42,7 +42,7 @@ describe('like controller', () => {
         await like(req, res);
 
         expect(existingLike.deleteOne).toHaveBeenCalled();
-        expect(Post.findByIdAndUpdate).toHaveBeenCalledWith('postId123', { $inc: { likesCount: -1 } });
+        expect(Post.findByIdAndUpdate).toHaveBeenCalledWith('postId123', { $pull: { likedBy: 'userId123' } });
         expect(res.json).toHaveBeenCalledWith({ success: true, liked: false });
     });
 
@@ -55,7 +55,7 @@ describe('like controller', () => {
         await like(req, res);
 
         expect(Like.create).toHaveBeenCalledWith({ userId: 'userId123', postId: 'postId123' });
-        expect(Post.findByIdAndUpdate).toHaveBeenCalledWith('postId123', { $inc: { likesCount: 1 } });
+        expect(Post.findByIdAndUpdate).toHaveBeenCalledWith('postId123', { $addToSet: { likedBy: 'userId123' } });
         expect(res.json).toHaveBeenCalledWith({ success: true, liked: true });
     });
 });
