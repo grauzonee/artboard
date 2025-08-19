@@ -2,13 +2,18 @@
 import { ref, onMounted } from "vue";
 import BaseInput from "@/components/BaseInput.vue";
 import BaseButton from "@/components/BaseButton.vue";
+import { addComment } from "@/helpers/comments";
 
+const props = defineProps<{ postId: string }>();
+const emit = defineEmits(["commentAdded"]);
 const showButtons = ref(false);
 
 onMounted(() => {
   onInput();
 });
+
 const commentText = ref(null);
+
 function onInput() {
   showButtons.value = commentText.value?.length > 0 ? true : false;
 }
@@ -18,8 +23,13 @@ function onCancel() {
   onInput();
 }
 
-function onSave() {
-  console.log("TBC...");
+async function onSave() {
+  const formData = {
+    content: commentText.value,
+    post: props.postId,
+  };
+  await addComment(formData);
+  emit("commentAdded");
 }
 </script>
 <template>

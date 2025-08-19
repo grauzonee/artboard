@@ -31,6 +31,9 @@ watch(
     }
   },
 );
+
+function onCommentAdded() {}
+
 defineExpose({
   toggleWidget: () => widgetRef.value?.toggleWidget(),
 });
@@ -69,12 +72,15 @@ defineExpose({
       />
     </div>
     <div class="comments-block px-4 mt-4">
-      <NewCommentForm class="my-3" />
+      <NewCommentForm
+        class="my-3"
+        :post-id="post.id"
+        @comment-added="onCommentAdded"
+      />
       <CommentsList
         v-if="commentsFilter"
         class="max-h-64"
         :filter="commentsFilter"
-        :post-id="post.id"
       />
     </div>
   </BaseWidget>

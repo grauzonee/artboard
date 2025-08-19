@@ -17,7 +17,7 @@ defineProps({
     <div class="flex flex-row justify-start gap-3 items-center">
       <UserAvatarField
         class="h-10 w-10"
-        :url="comment.author.imageUrl"
+        :url="comment.author.avatar"
       />
       <p class="block font-bold">
         {{ comment.author.username }}
