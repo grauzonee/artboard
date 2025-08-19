@@ -5,6 +5,7 @@ import { router as postsRouter } from '@routes/posts';
 import { router as mediaRouter } from '@routes/media';
 import { router as commentRouter } from '@routes/comments';
 import { router as userRouter } from '@routes/user';
+import { router as likesRouter } from '@routes/likes';
 import { checkAllRequiredVars, getConfigValue } from "@helper/configHelper";
 import mongoose from "mongoose";
 import path from 'path';
@@ -23,6 +24,7 @@ app.use('/api/user', userRouter);
 app.use('/api/posts', postsRouter);
 app.use('/api/media', mediaRouter);
 app.use('/api/comments', commentRouter);
+app.use('/api/like', likesRouter);
 app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 app.get('/', (req, res) => {
     res.send(JSON.stringify({ message: "Hello world!" }));

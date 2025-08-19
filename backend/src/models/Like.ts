@@ -28,5 +28,6 @@ const likeSchema = new Schema<ILike>({
 likeSchema.statics.getSortableFields = () => {
     return ['createdAt'];
 }
+likeSchema.index({ userId: 1, postId: 1 }, { unique: true })
 
-export const Post = model<ILike, ILikeModel>('Like', likeSchema);
+export const Like = model<ILike, ILikeModel>('Like', likeSchema);

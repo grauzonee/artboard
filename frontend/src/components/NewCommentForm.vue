@@ -44,16 +44,9 @@ async function onSave() {
         @on-input="onInput"
       />
     </div>
-    <div
-      v-if="showButtons"
-      class="flex flex-row justify-end gap-1 mb-3"
-    >
+    <div v-if="showButtons" class="flex flex-row justify-end gap-1 mb-3">
       <div class="w-1/2 md:w-1/3 lg:w-1/6 shadow-lg">
-        <BaseButton
-          label="Save"
-          class="text-xs"
-          @clicked="onSave"
-        />
+        <BaseButton label="Save" class="text-xs" @clicked="onSave" />
       </div>
       <div class="w-1/2 md:w-1/3 lg:w-1/6 shadow-lg">
         <BaseButton
